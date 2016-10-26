@@ -23,21 +23,30 @@ case class UsarItem(item: Item) extends Movimiento{
 }
 
 case class ComerseAlOponente() extends Movimiento{
-  /*    def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    
-  }*/
+      def ejecutar(atacante: Guerrero, atacado: Guerrero){
+        atacante match{
+          case atacante:Monstruo => atacado match{
+            case atacado:GuerreroOrganico if(atacante.ki >= atacado.ki) => atacante.adquirirMovimientos(atacado.getMovimientos())
+            case atacado:Androide => atacante.adquirirMovimientos(atacado.getMovimientos())
+          }
+        }
+  }
 }
 
 case class ConvertirseEnMono() extends Movimiento{
-   /*   def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    
-  }*/
+  def ejecutar(atacante: Guerrero, atacado: Guerrero){
+    atacante match{
+      case atacante:Saiyajin if(atacante.tengoItem(new FotoDeLaLuna) && atacante.tieneCola) => atacante.estado = new Mono()
+    }
+  }
 }
 
 case class ConvertirseEnSuperSaiyajin() extends Movimiento{
-  /*    def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    
-  }*/
+  def ejecutar(atacante: Guerrero, atacado: Guerrero){
+    atacante match{
+      case atacante:Saiyajin if(atacante.ki > atacante.kiMaximo/2) => atacante.pasarNivel()  
+    }
+  }
 }
 
 case class Fusion() extends Movimiento{

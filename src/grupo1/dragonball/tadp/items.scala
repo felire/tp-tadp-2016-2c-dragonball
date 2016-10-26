@@ -56,3 +56,10 @@ class SemillaErmitanio extends Item{
     }
   }
 }
+
+class FotoDeLaLuna extends Item{
+    override def usar(propietario:Guerrero, nada: Guerrero){
+    }
+}
+
+
