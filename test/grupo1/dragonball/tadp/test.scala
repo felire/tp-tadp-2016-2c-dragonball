@@ -6,7 +6,7 @@ import org.junit.Assert._
 class test {
   @Test
   def prueba_test() = {
-    var prueba = new Prueba()
-    assertEquals(1,prueba.hola)
+    var prueba = 1
+    assertEquals(1,prueba)
   }
 }
