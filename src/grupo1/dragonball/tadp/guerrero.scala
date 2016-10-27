@@ -162,6 +162,3 @@ class DigieroTodos() extends MetodoDeDigerir
     movimientos = movimientos++movimientosNuevos
   }
 }
-
-
-
