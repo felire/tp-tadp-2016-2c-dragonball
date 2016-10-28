@@ -78,4 +78,7 @@ object FotoDeLaLuna extends Item
     override def usar(propietario:Guerrero, nada: Guerrero){}
 }
 
+class EsferaDelDragon(val estrella: Int) extends Item{
+  override def usar(propietario:Guerrero, nada: Guerrero){}
+}
 

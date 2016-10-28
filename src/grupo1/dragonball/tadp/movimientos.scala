@@ -73,10 +73,14 @@ case class Fusion(companiero: GuerreroOrganico) extends Movimiento{
   }*/
 }
 
-case class Magia() extends Movimiento{
-   /*   def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    
-  }*/
+case class Magia(poderMistico: (Guerrero,Guerrero)=>(Guerrero,Guerrero)) extends Movimiento{
+  def ejecutar(atacante: Guerrero, atacado: Guerrero){
+    atacante match{
+      case atacante:Magico => poderMistico(atacante, atacado)
+      case atacante:Guerrero if(atacante.tieneEsferas) => poderMistico(atacante, atacado)
+      case _ =>
+    }
+  }
 }
 
 abstract class Ataque extends Movimiento{

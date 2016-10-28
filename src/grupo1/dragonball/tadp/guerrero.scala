@@ -1,5 +1,7 @@
 package grupo1.dragonball.tadp
 
+
+
 abstract class Guerrero
 {
   var items = List[Item]()
@@ -37,6 +39,18 @@ abstract class Guerrero
   def addItem(item: Item){
     items = items.+:(item)
   }
+  
+  def tieneEsferas: Boolean = {
+    (1 to 7).forall(numero =>
+      items.exists ( item => 
+        item match {
+          case item:EsferaDelDragon => item.estrella == numero
+          case _ => false
+        }
+      )
+   )
+ }
+  
 }
 
 abstract class GuerreroOrganico extends Guerrero
@@ -71,7 +85,8 @@ class Humano extends GuerreroOrganico
   
 }
 
-class Namekusein extends GuerreroOrganico
+trait Magico
+class Namekusein extends GuerreroOrganico with Magico
 {
   
 }
@@ -79,7 +94,7 @@ class Namekusein extends GuerreroOrganico
 
 
 //los movimientos se dividen en los propios y los que digirio.
-class Monstruo extends GuerreroOrganico
+class Monstruo extends GuerreroOrganico with Magico
 {
   var metodoDeDigerir:MetodoDeDigerir = new DigieroTodos() //por defecto
   
