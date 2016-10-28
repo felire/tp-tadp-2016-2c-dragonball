@@ -63,9 +63,13 @@ case class ConvertirseEnSuperSaiyajin() extends Movimiento
   }
 }
 
-case class Fusion() extends Movimiento{
-    /*  def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    
+case class Fusion(companiero: GuerreroOrganico) extends Movimiento{
+   /*def ejecutar(atacante: Guerrero, atacado: Guerrero){
+    atacante match{
+      case atacante:GuerreroOrganico => 
+        
+      case _ =>
+    }
   }*/
 }
 

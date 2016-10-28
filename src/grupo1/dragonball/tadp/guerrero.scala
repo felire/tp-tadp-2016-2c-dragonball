@@ -15,6 +15,10 @@ abstract class Guerrero
       case movimiento:ConvertirseEnSuperSaiyajin => movimiento.ejecutar(this, atacado)
       case movimiento:ComerseAlOponente => movimiento.ejecutar(this, atacado)
       case movimiento:ConvertirseEnMono => movimiento.ejecutar(this,atacado)
+      case Fusion(companiero:GuerreroOrganico) => this match{
+        case original:GuerreroOrganico => original.fusion(companiero) //Devuelve un GuerreroFusion, abria que ver que hacer con el
+        case _ =>
+      }
       case _ =>
     }
   }
@@ -45,6 +49,16 @@ abstract class GuerreroOrganico extends Guerrero
   {
     ki = ki + 100
   }
+  
+  def fusion(guerrero: GuerreroOrganico){
+    new GuerreroFusion(this, this.ki + guerrero.ki, this.kiMaximo+guerrero.kiMaximo, this.getMovimientos().++(guerrero.getMovimientos()))
+  }
+}
+
+class GuerreroFusion(guerreroOriginal: GuerreroOrganico,var ki: Int,var kiMaximo: Int, movimientos: List[Movimiento]) extends Guerrero{
+  override def cargarKi(){
+    ki = ki + 100
+  }
 }
 
 class Androide extends Guerrero
@@ -61,6 +75,8 @@ class Namekusein extends GuerreroOrganico
 {
   
 }
+
+
 
 //los movimientos se dividen en los propios y los que digirio.
 class Monstruo extends GuerreroOrganico
