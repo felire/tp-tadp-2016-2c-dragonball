@@ -1,12 +1,14 @@
 package grupo1.dragonball.tadp
 
-abstract class Guerrero(var items: List[Item], private var movimientos: List[Movimiento]) {
-
+abstract class Guerrero {
+  var items: List[Item] = List()
+  var movimientos: List[Movimiento] = List()
   def ejecutar(movimiento: Movimiento,atacado:Guerrero){
     movimiento match{
       case DejarseFajar() => 
       case CargarKi() => this.cargarKi
       case UsarItem(item) if(tengoItem(item)) => item.usar(this, atacado)
+      case movimiento:ConvertirseEnSuperSaiyajin => movimiento.ejecutar(this, atacado)
     }
   }
   def tengoItem(item:Item):Boolean={
@@ -17,10 +19,13 @@ abstract class Guerrero(var items: List[Item], private var movimientos: List[Mov
   def getMovimientos():List[Movimiento]={
     movimientos
   }
+    def addMovimiento(movimiento: Movimiento){
+    movimientos = movimientos.+:(movimiento) //añadir de scala.. muy expresivo
+  }
 }
 
 
-abstract class GuerreroOrganico( var ki: Int, items: List[Item], movimientos: List[Movimiento], kiMaximoR:Int) extends Guerrero(items, movimientos){
+abstract class GuerreroOrganico( var ki: Int, kiMaximoR:Int) extends Guerrero{
   
   var conciente:Boolean = true
   var kiMaximo:Int = kiMaximoR
@@ -29,15 +34,15 @@ abstract class GuerreroOrganico( var ki: Int, items: List[Item], movimientos: Li
   }
 }
 
-case class Androide(var bateria: Int, itemsR: List[Item], movimientosR: List[Movimiento]) extends Guerrero(itemsR, movimientosR){
+case class Androide(var bateria: Int) extends Guerrero{
   override def cargarKi{}  
 }
 
-case class Humano( kiR: Int, itemsR: List[Item], movimientosR: List[Movimiento], kiMaximoR:Int) extends GuerreroOrganico( kiR, itemsR, movimientosR, kiMaximoR){
+case class Humano( kiR: Int, kiMaximoR:Int) extends GuerreroOrganico( kiR, kiMaximoR){
   
 }
 
-case class Saiyajin(kiR: Int, itemsR: List[Item], movimientosR: List[Movimiento], kiMaximoR:Int, var estado: Estado) extends GuerreroOrganico( kiR, itemsR, movimientosR, kiMaximoR){
+case class Saiyajin(kiR: Int, kiMaximoR:Int, var estado: Estado) extends GuerreroOrganico( kiR, kiMaximoR){
   var tieneCola: Boolean = true  
   override def cargarKi{
       estado.cargarKi(this)
@@ -90,7 +95,7 @@ case class Normal() extends Estado{
   }
 }
 
-case class Namekusein(kiR: Int, itemsR: List[Item], movimientosR: List[Movimiento], kiMaximoR:Int) extends GuerreroOrganico( kiR, itemsR, movimientosR, kiMaximoR){
+case class Namekusein(kiR: Int, kiMaximoR:Int) extends GuerreroOrganico( kiR, kiMaximoR){
   
 }
 
@@ -115,7 +120,7 @@ class DigieroTodos() extends MetodoDeDigerir{
 }
 
 //los movimientos se dividen en los propios y los que digirio.
-case class Monstruo(kiR: Int, itemsR: List[Item], movimientosR: List[Movimiento], kiMaximoR:Int) extends GuerreroOrganico( kiR, itemsR, movimientosR, kiMaximoR){
+case class Monstruo(kiR: Int, kiMaximoR:Int) extends GuerreroOrganico( kiR, kiMaximoR){
   var metodoDeDigerir:MetodoDeDigerir = new DigieroTodos() //por defecto
   def adquirirMovimientos(movimientos:List[Movimiento]) {
     metodoDeDigerir.agregarMovimientos(movimientos)
