@@ -97,6 +97,31 @@ class test {
     saiyajin.ejecutar(new UsarItem(semilla), atacado)
     assertEquals(100,saiyajin.ki)
   } 
-        
+  
+  @Test
+  def comerseAlOponenteAdquieroTodos_test() = {
+    var monstruo = new Monstruo
+    var atacado = new Saiyajin
+    var atacado2 = new Saiyajin
+    atacado2.addMovimiento(new ConvertirseEnSuperSaiyajin)
+    atacado.addMovimiento(new CargarKi)
+    monstruo.ejecutar(new ComerseAlOponente, atacado)
+     monstruo.ejecutar(new ComerseAlOponente, atacado2)
+    assertEquals(2,monstruo.getMovimientos().length)
+  }
+  
+   @Test
+  def comerseAlOponenteAdquieroUltimo_test() = {
+    var monstruo = new Monstruo
+    monstruo.metodoDeDigerir = new SoloDigieroUltimo
+    var atacado = new Saiyajin
+    var atacado2 = new Saiyajin
+    atacado2.addMovimiento(new ConvertirseEnSuperSaiyajin)
+    atacado.addMovimiento(new CargarKi)
+    monstruo.ejecutar(new ComerseAlOponente, atacado)
+     assertEquals(1,monstruo.getMovimientos().length)
+     monstruo.ejecutar(new ComerseAlOponente, atacado2)
+    assertEquals(1,monstruo.getMovimientos().length)
+  }  
    
 }
