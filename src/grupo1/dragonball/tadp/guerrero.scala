@@ -11,7 +11,11 @@ abstract class Guerrero
     {
       case DejarseFajar() => 
       case CargarKi() => this.cargarKi
-      case UsarItem(item) if(tengoItem(item)) => item.usar(this, atacado)
+      case UsarItem(item:Item) if(tengoItem(item)) => item.usar(this, atacado)
+      case movimiento:ConvertirseEnSuperSaiyajin => movimiento.ejecutar(this, atacado)
+      case movimiento:ComerseAlOponente => movimiento.ejecutar(this, atacado)
+      case movimiento:ConvertirseEnMono => movimiento.ejecutar(this,atacado)
+      case _ =>
     }
   }
   def tengoItem(item:Item):Boolean=
@@ -25,6 +29,9 @@ abstract class Guerrero
   }
   def addMovimiento(movimiento: Movimiento){
     movimientos = movimientos.+:(movimiento) //añadir de scala.. muy expresivo
+  }
+  def addItem(item: Item){
+    items = items.+:(item)
   }
 }
 

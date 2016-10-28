@@ -5,13 +5,98 @@ import org.junit.Assert._
 
 class test {
   @Test
-  def prueba_test() = {
+  def cargarKi_test() = {
     var saiyajin = new Saiyajin
-    var monstruo = new Monstruo
+    saiyajin.addMovimiento(new CargarKi)
+    saiyajin.ejecutar(new CargarKi, null)
+    assertEquals(150, saiyajin.ki)
+  }
+   @Test
+  def transformarseEnSaiyan_test() = {
+    var saiyajin = new Saiyajin
     saiyajin.addMovimiento(new CargarKi)
     saiyajin.ejecutar(new CargarKi, null)
     assertEquals(150, saiyajin.ki)
     saiyajin.ejecutar(new ConvertirseEnSuperSaiyajin, null)
-    
+    saiyajin.ejecutar(new CargarKi, null)
+    assertEquals(300, saiyajin.ki)
+    saiyajin.ejecutar(new ConvertirseEnSuperSaiyajin, null)
+    saiyajin.ejecutar(new CargarKi, null)
+    assertEquals(600, saiyajin.ki) //nivel 3
   }
+     @Test
+  def transformarseEnMono_test() = {
+    var saiyajin = new Saiyajin
+    saiyajin.addItem(FotoDeLaLuna)
+    saiyajin.ejecutar(new ConvertirseEnMono, null)
+    assertEquals(true, saiyajin.estado match{
+      case estado:Mono => true
+      case _ => false
+    })
+  }
+  @Test
+  def usarRoma_test() = {
+    var saiyajin = new Saiyajin
+    var atacado = new Saiyajin
+    var roma = new Roma
+    saiyajin.addItem(roma)
+    saiyajin.ejecutar(new UsarItem(roma), atacado)
+    assertEquals(false, atacado.conciente)
+  }
+  @Test
+  def usarFilosaContraSaiyanNormalConCola_test() = {
+    var saiyajin = new Saiyajin
+    var atacado = new Saiyajin
+    var filosa = new Filosa
+    saiyajin.addItem(filosa)
+    saiyajin.ejecutar(new UsarItem(filosa), atacado)
+    assertEquals(false, atacado.tieneCola)
+    assertEquals(1, atacado.ki)
+  }
+  
+   @Test
+  def usarFilosaContraSaiyanMono_test() = {
+    var saiyajin = new Saiyajin
+    var atacado = new Saiyajin
+    atacado.estado = new Mono
+    var filosa = new Filosa
+    saiyajin.addItem(filosa)
+    saiyajin.ejecutar(new UsarItem(filosa), atacado)
+    assertEquals(false, atacado.tieneCola)
+    assertEquals(1, atacado.ki)
+    assertEquals(true, atacado.estado match{
+      case estado:Normal => true
+      case _ => false
+    })
+    assertEquals(false, atacado.conciente)
+  } 
+    @Test
+  def usarFuego_test() = {
+    var saiyajin = new Saiyajin
+    var atacado = new Humano
+    var atacado2 = new Namekusein
+    atacado2.conciente = false
+    var fuego = new Fuego(10)
+    saiyajin.addItem(fuego)
+    saiyajin.ejecutar(new UsarItem(fuego), atacado)
+    assertEquals(30, atacado.ki)
+    assertEquals(9,fuego.balas)
+    saiyajin.ejecutar(new UsarItem(fuego), atacado2)
+    assertEquals(40, atacado2.ki)
+    assertEquals(8,fuego.balas)
+  } 
+   
+   
+  @Test
+  def usarSemilla_test() = {
+    var saiyajin = new Saiyajin
+    var atacado = new Saiyajin
+    atacado.estado = new Mono
+    var semilla = new SemillaErmitanio
+    saiyajin.addItem(semilla)
+    saiyajin.ejecutar(new UsarItem(semilla), atacado)
+    assertEquals(100,saiyajin.ki)
+  } 
+        
+   
 }

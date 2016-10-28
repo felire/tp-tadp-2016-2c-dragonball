@@ -32,7 +32,9 @@ case class ComerseAlOponente() extends Movimiento
       {
         case atacado:GuerreroOrganico if(atacante.ki >= atacado.ki) => atacante.adquirirMovimientos(atacado.getMovimientos())
         case atacado:Androide => atacante.adquirirMovimientos(atacado.getMovimientos())
+        case _ =>
       }
+      case _ =>
     }
   }
 }
@@ -43,7 +45,8 @@ case class ConvertirseEnMono() extends Movimiento
   {
     atacante match
     {
-      case atacante:Saiyajin if(atacante.tengoItem(new FotoDeLaLuna) && atacante.tieneCola) => atacante.estado = new Mono()
+      case atacante:Saiyajin if(atacante.tengoItem(FotoDeLaLuna) && atacante.tieneCola) => atacante.estado = new Mono()
+      case _ =>
     }
   }
 }
@@ -54,7 +57,8 @@ case class ConvertirseEnSuperSaiyajin() extends Movimiento
   {
     atacante match
     {
-      case atacante:Saiyajin if(atacante.ki > atacante.kiMaximo/2) => atacante.pasarNivel()  
+      case atacante:Saiyajin if(atacante.ki > atacante.kiMaximo/2) => atacante.pasarNivel()
+      case _ =>
     }
   }
 }

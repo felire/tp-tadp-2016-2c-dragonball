@@ -18,7 +18,7 @@ class Roma extends Arma
       case atacado:GuerreroOrganico => 
         if(atacado.ki < 300)
         {
-          atacado.conciente = true
+          atacado.conciente = false //estaba en true pero creo q va false
         }
     }
   }
@@ -34,6 +34,7 @@ class Filosa extends Arma
     {
       case atacado:Saiyajin => atacado.estado.recibirAtaqueFilosa(atacado)
       case atacado:GuerreroOrganico => atacado.ki-=kiARestar
+      case _ =>
     }
   }
 }
@@ -53,7 +54,8 @@ class Fuego(var balas:Int) extends Arma
       atacado match
       {
         case atacado:Humano => atacado.ki -= 20
-        case atacado:Namekusein if(!atacado.conciente) => atacado.ki -= 10      
+        case atacado:Namekusein if(!atacado.conciente) => atacado.ki -= 10   
+        case _ =>
       }
     }
   }
@@ -66,11 +68,12 @@ class SemillaErmitanio extends Item
     propietario match
     {
       case propietario:GuerreroOrganico => propietario.ki = propietario.kiMaximo
+      case _ =>
     }
   }
 }
 
-class FotoDeLaLuna extends Item
+object FotoDeLaLuna extends Item
 {
     override def usar(propietario:Guerrero, nada: Guerrero){}
 }
