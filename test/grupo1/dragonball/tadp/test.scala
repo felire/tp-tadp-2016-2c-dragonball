@@ -6,7 +6,12 @@ import org.junit.Assert._
 class test {
   @Test
   def prueba_test() = {
-    var prueba = 1
-    assertEquals(1,prueba)
+    var saiyajin = new Saiyajin
+    var monstruo = new Monstruo
+    saiyajin.addMovimiento(new CargarKi)
+    saiyajin.ejecutar(new CargarKi, null)
+    assertEquals(150, saiyajin.ki)
+    saiyajin.ejecutar(new ConvertirseEnSuperSaiyajin, null)
+    
   }
 }

@@ -23,6 +23,9 @@ abstract class Guerrero
   {
     movimientos
   }
+  def addMovimiento(movimiento: Movimiento){
+    movimientos = movimientos.+:(movimiento) //añadir de scala.. muy expresivo
+  }
 }
 
 abstract class GuerreroOrganico extends Guerrero
