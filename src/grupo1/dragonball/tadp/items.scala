@@ -2,7 +2,8 @@ package grupo1.dragonball.tadp
 
 abstract class Item
 {
-  def usar(propietario: Guerrero, atacado:Guerrero)
+  type Guerreros = (Guerrero, Option[Guerrero])
+  def apply(guerreros: Guerreros)
 }
 
 abstract class Arma extends Item{
@@ -11,7 +12,7 @@ abstract class Arma extends Item{
 
 class Roma extends Arma
 {
-  override def usar(propietario:Guerrero, atacado: Guerrero)
+  def apply(guerreros: Guerreros)
   {
     atacado match
     {
@@ -27,7 +28,7 @@ class Roma extends Arma
 
 class Filosa extends Arma
 {
-  override def usar(propietario:Guerrero, atacado: Guerrero)
+  def apply(guerreros: Guerreros)
   {
     var kiARestar = propietario.asInstanceOf[GuerreroOrganico].ki/100
     atacado match
@@ -46,7 +47,7 @@ class Fuego(var balas:Int) extends Arma
     balas>0
   }
   
-  override def usar(propietario:Guerrero, atacado:Guerrero)
+  def apply(guerreros: Guerreros)
   {
     if(tieneBalas)
     {//si no, falta tirar excepcion o algo
@@ -63,7 +64,7 @@ class Fuego(var balas:Int) extends Arma
 
 class SemillaErmitanio extends Item
 {
-  override def usar(propietario:Guerrero, nada: Guerrero)
+  def apply(guerreros: Guerreros)
   {
     propietario match
     {
@@ -75,10 +76,10 @@ class SemillaErmitanio extends Item
 
 object FotoDeLaLuna extends Item
 {
-    override def usar(propietario:Guerrero, nada: Guerrero){}
+    def apply(guerreros: Guerreros){}
 }
 
 class EsferaDelDragon(val estrella: Int) extends Item{
-  override def usar(propietario:Guerrero, nada: Guerrero){}
+  def apply(guerreros: Guerreros){}
 }
 

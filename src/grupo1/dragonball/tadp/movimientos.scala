@@ -1,30 +1,41 @@
 package grupo1.dragonball.tadp
 
-abstract class Movimiento{
-   // def ejecutar(atacante: Guerrero, atacado: Guerrero)
+
+trait Movimiento{
+    type Guerreros = (Guerrero, Option[Guerrero])
+    def apply(guerreros: Guerreros)
 }
 
-case class DejarseFajar() extends Movimiento{
-  /*  def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    
-  }*/
+case object DejarseFajar extends Movimiento{
+    def apply(guerreros: Guerreros){
+    val (atacante, atacado) = guerreros
+    atacante.estado match{
+      case Luchando => (atacante.copy(estado = Fajadas(1)), atacado)
+      case Fajadas(cantidad) => (atacante.copy(estado = Fajadas(cantidad + 1)), atacado)
+      case _ => (atacante, atacado)
+    }
+  }
 }
 
-case class CargarKi() extends Movimiento{
- /*     def ejecutar(atacante: Guerrero, atacado: Guerrero){
-      atacante.cargarKi
-  }*/
+case object CargarKi extends Movimiento{
+   def apply(guerreros: Guerreros){
+      val (atacante, atacado) = guerreros
+      atacante.especie match{
+        case Androide(_) => (atacante, atacado)
+        case _ => (atacante.actualizarKi, atacado) //La idea es que actualizarKi devuelva un nuevo Guerrero con la especie con el nuevo ki
+      }
+  }
 }
 
 case class UsarItem(item: Item) extends Movimiento{
-/*      def ejecutar(atacante: Guerrero, atacado: Guerrero){
+   def apply(guerreros: Guerreros){
     
-  }*/
+  }
 }
 
-case class ComerseAlOponente() extends Movimiento
+case object ComerseAlOponente extends Movimiento
 {
-  def ejecutar(atacante: Guerrero, atacado: Guerrero)
+  def apply(guerreros: Guerreros)
   {
     atacante match
     {
@@ -39,9 +50,9 @@ case class ComerseAlOponente() extends Movimiento
   }
 }
 
-case class ConvertirseEnMono() extends Movimiento
+case object ConvertirseEnMono extends Movimiento
 {
-  def ejecutar(atacante: Guerrero, atacado: Guerrero)
+  def apply(guerreros: Guerreros)
   {
     atacante match
     {
@@ -51,9 +62,9 @@ case class ConvertirseEnMono() extends Movimiento
   }
 }
 
-case class ConvertirseEnSuperSaiyajin() extends Movimiento
+case object ConvertirseEnSuperSaiyajin extends Movimiento
 {
-  def ejecutar(atacante: Guerrero, atacado: Guerrero)
+  def apply(guerreros: Guerreros)
   {
     atacante match
     {
@@ -64,17 +75,13 @@ case class ConvertirseEnSuperSaiyajin() extends Movimiento
 }
 
 case class Fusion(companiero: GuerreroOrganico) extends Movimiento{
-   /*def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    atacante match{
-      case atacante:GuerreroOrganico => 
-        
-      case _ =>
-    }
-  }*/
+   def apply(guerreros: Guerreros){
+    
+  }
 }
 
 case class Magia(poderMistico: (Guerrero,Guerrero)=>(Guerrero,Guerrero)) extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero){
+  def apply(guerreros: Guerreros){
     atacante match{
       case atacante:Magico => poderMistico(atacante, atacado)
       case atacante:Guerrero if(atacante.tieneEsferas) => poderMistico(atacante, atacado)
@@ -87,22 +94,22 @@ abstract class Ataque extends Movimiento{
 
 }
 
-case class Explotar() extends Ataque{
- /* def ejecutar(atacante: Guerrero, atacado: Guerrero){
+case object Explotar extends Ataque{
+  def apply(guerreros: Guerreros){
     
-  }*/
+  }
 }
 
-case class Onda() extends Ataque{
-  /*def ejecutar(atacante: Guerrero, atacado: Guerrero){
+case object Onda extends Ataque{
+  def apply(guerreros: Guerreros){
     
-  }*/
+  }
 }
 
-case class Genkidama() extends Ataque{
-   /*   override def ejecutar(atacante: Guerrero, atacado: Guerrero){
+case object Genkidama extends Ataque{
+   def apply(guerreros: Guerreros){
     
-  }*/
+  }
 }
 
 
