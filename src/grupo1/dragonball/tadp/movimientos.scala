@@ -1,51 +1,50 @@
 package grupo1.dragonball.tadp
 
+import scala.util.Try
+
 
 trait Movimiento{
-    type Guerreros = (Guerrero, Option[Guerrero])
-    def apply(guerreros: Guerreros)
+    
+    type f =(Guerrero, Guerrero)
+    def apply(guerreros :f) : Resultado
+    
 }
 
 case object DejarseFajar extends Movimiento{
-    def apply(guerreros: Guerreros){
-    val (atacante, atacado) = guerreros
-    atacante.estado match{
-      case Luchando => (atacante.copy(estado = Fajadas(1)), atacado)
-      case Fajadas(cantidad) => (atacante.copy(estado = Fajadas(cantidad + 1)), atacado)
-      case _ => (atacante, atacado)
-    }
-  }
+    def apply(atacante :Guerrero,  atacado : Guerrero)={
+      atacante.estado match{
+        case Luchando => Resultado(Try(atacante.copy(estado = Fajadas(1))),Try( atacado))
+        case Fajadas(cantidad) => Resultado(Try(atacante.copy(estado = Fajadas(cantidad + 1))),Try( atacado))
+        case _ => Resultado(Try(atacante), Try(atacado))
+      }
+    }  
 }
 
-case object CargarKi extends Movimiento{
-   def apply(guerreros: Guerreros){
-      val (atacante, atacado) = guerreros
-      atacante.especie match{
-        case Androide(_) => (atacante, atacado)
-        case _ => (atacante.actualizarKi, atacado) //La idea es que actualizarKi devuelva un nuevo Guerrero con la especie con el nuevo ki
+case object CargarKi extends Movimiento{  
+   def apply(atacante :Guerrero,  atacado : Guerrero)= {
+       atacante.especie match{
+        case Androide => Resultado(Try(throw new Exception("Los androides no pueden cargar ki")),Try(atacado))
+        case Saiyajin(SuperSaiyajin(nivel),_) => Resultado(Try(atacante.modificarEnergia(150*nivel)), Try( atacado))
+        case _ => Resultado(Try(atacante.modificarEnergia(100)), Try( atacado))
       }
-  }
+   }
 }
 
 case class UsarItem(item: Item) extends Movimiento{
-   def apply(guerreros: Guerreros){
-    
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    item.apply(atacante,atacado)
   }
 }
 
-case object ComerseAlOponente extends Movimiento
-{
-  def apply(guerreros: Guerreros)
-  {
-    atacante match
-    {
-      case atacante:Monstruo => atacado match
-      {
-        case atacado:GuerreroOrganico if(atacante.ki >= atacado.ki) => atacante.adquirirMovimientos(atacado.getMovimientos())
-        case atacado:Androide => atacante.adquirirMovimientos(atacado.getMovimientos())
-        case _ =>
+case object ComerseAlOponente extends Movimiento{
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    atacante.especie match{
+      case Monstruo(tipoDigestivo) => atacado.especie match{
+        case Androide => Resultado(Try(atacante.adquirirMovimientos(tipoDigestivo,atacado.movimientos)), Try(atacado))
+        case _ if(atacante.energia >= atacado.energia) => Resultado(Try(atacante.adquirirMovimientos(tipoDigestivo,atacado.movimientos)),Try(atacado))
+        case _ => Resultado(Try(atacante),Try(atacado))
       }
-      case _ =>
+      case _ => Resultado(Try(throw new Exception("Solo los monstruos pueden comer")),Try(atacado))
     }
   }
 }

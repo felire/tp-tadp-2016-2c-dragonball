@@ -1,59 +1,22 @@
 package grupo1.dragonball.tadp
 trait Especie{
-  def kiNuevo : Especie
+  def adquirirMovimientos(movimientos:List[Movimiento]) = List()
+  def getMovimientos():List[Movimiento] = List()
 }
-case class Androide(bateria: Int) extends Especie{
-  def kiNuevo{
-    copy(bateria = bateria)
-  }
-}
-case class Humano(ki: Int, kiMax:Int) extends Especie{
-    def kiNuevo{
-    copy(ki = ki+100, kiMax = kiMax )
-  }
-}
+case object Androide extends Especie
+case object Humano extends Especie
 trait Magico
-case class Namekusein(ki: Int, kiMax:Int) extends Especie with Magico{
-    def kiNuevo{
-     copy(ki = ki+100, kiMax = kiMax )
-  }
-}
+case object Namekusein extends Especie with Magico
 //los movimientos se dividen en los propios y los que digirio.
-case class Monstruo(ki: Int, kiMax:Int, metodo:MetodoDeDigerir) extends Especie with Magico
-{
-  def kiNuevo{
-     copy(ki = ki+100, kiMax = kiMax, metodo = metodo )
-  }
-  //var metodoDeDigerir:MetodoDeDigerir = new DigieroTodos() //por defecto
-  
-  def adquirirMovimientos(movimientos:List[Movimiento])
-  {
-    metodo.agregarMovimientos(movimientos)
-  }
-  def getMovimientos():List[Movimiento]=
-  {
-    //super.getMovimientos()++metodoDeDigerir.getMovimientos() --> Re pensar inmutable
+case class Monstruo(metodo:MetodoDeDigerir) extends Especie with Magico{
+  def getMovimientos :List[Movimiento] = {
+    metodo.getMovimientos
   }
 }
 
 //case class GuerreroFusion(guerreroOriginal: GuerreroOrganico,ki: Int,kiMaximo: Int) extends Especie
 
-case class Saiyajin(ki: Int, kiMax:Int, estado:Estado = Normal, tieneCola:Boolean = true) extends Especie
-{
-  
-  def cargarKi
-  {
-      copy(ki = estado.cargarKi(ki), kiMax = kiMax, estado = estado, tieneCola = tieneCola)
-  }
-  def perderCola
-  {
-    tieneCola = false
-  }
-  def pasarNivel()
-  {
-    estadoPoder.aumentar(this)
-  }
-}
+case class Saiyajin(estado:Estado = Normal, tieneCola:Boolean = true) extends Especie
 
 
 
@@ -117,28 +80,26 @@ case object Normal extends Estado
 
 
 //metodos digestion
-abstract class MetodoDeDigerir()
+trait MetodoDeDigerir
 {
-  var movimientos:List[Movimiento] = List()
-  def getMovimientos():List[Movimiento]=
-  {
-    movimientos
-  }
+  def getMovimientos : List[Movimiento]
   def agregarMovimientos(movimientos:List[Movimiento])
 }
 
-class SoloDigieroUltimo() extends MetodoDeDigerir
+case class SoloDigieroUltimo(val movimientos :List[Movimiento]) extends MetodoDeDigerir
 {
-  def agregarMovimientos(movimientosNuevos:List[Movimiento])
+  def getMovimientos() = movimientos
+  def agregarMovimientos(movimientosNuevos:List[Movimiento])=
   {
-    movimientos = movimientosNuevos
+    copy(movimientosNuevos)
   }
 }
 
-class DigieroTodos() extends MetodoDeDigerir
+case class DigieroTodos(val movimientos :List[Movimiento]) extends MetodoDeDigerir
 {
+  def getMovimientos() = movimientos
   def agregarMovimientos(movimientosNuevos:List[Movimiento])
   {
-    movimientos = movimientos++movimientosNuevos
+    copy(movimientos++movimientosNuevos)
   }
 }

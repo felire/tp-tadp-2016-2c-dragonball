@@ -2,8 +2,8 @@ package grupo1.dragonball.tadp
 
 abstract class Item
 {
-  type Guerreros = (Guerrero, Option[Guerrero])
-  def apply(guerreros: Guerreros)
+   type f =(Guerrero, Guerrero)
+    def apply(guerreros :f) : Resultado
 }
 
 abstract class Arma extends Item{

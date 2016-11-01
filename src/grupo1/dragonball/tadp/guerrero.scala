@@ -2,7 +2,7 @@ package grupo1.dragonball.tadp
 
 
 
-case class Guerrero(items: List[item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
+case class Guerrero(energia : Int, energiaMax:Int, items: List[item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
 {
   
   def ejecutar(movimiento: Movimiento,atacado:Option[Guerrero])
@@ -23,9 +23,14 @@ case class Guerrero(items: List[item], movimientos: List[Movimiento], especie: E
     }
   }
   
-  def actualizarKi{
-    copy(Especie = especie.kiNuevo)
+  def getMovimientos : List[Movimiento]={
+    this.movimientos ++ especie.getMovimientos
   }
+  
+  def adquirirMovimientos(tipo: MetodoDeDigerir, movimientos :List[Movimiento])={
+    copy(especie = Monstruo(tipo.agregarMovimientos(movimientos)))
+  }
+  
   def tengoItem(item:Item):Boolean=
   {
     items.contains(item)
@@ -33,14 +38,18 @@ case class Guerrero(items: List[item], movimientos: List[Movimiento], especie: E
   
   def tieneEsferas: Boolean = {
     (1 to 7).forall(numero =>
-      items.exists ( item => 
-        item match {
-          case item:EsferaDelDragon => item.estrella == numero
-          case _ => false
-        }
-      )
-   )
- }
+        items.exists ( item => 
+          item match {
+            case item:EsferaDelDragon => item.estrella == numero
+            case _ => false
+          }
+        )
+     )
+   }
+  
+  def modificarEnergia (energy: Int)={
+    copy(energia = energia + energy)
+  }
   
 }
 
