@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.Assert._
 
 class test {
+  /*
   @Test
   def cargarKi_test() = {
     var saiyajin = new Saiyajin
@@ -122,6 +123,12 @@ class test {
      assertEquals(1,monstruo.getMovimientos().length)
      monstruo.ejecutar(new ComerseAlOponente, atacado2)
     assertEquals(1,monstruo.getMovimientos().length)
+  }  
+   */
+  @Test
+  def testt() = {
+    var r = 1 max 2
+    assertEquals(1,r)
   }  
    
 }

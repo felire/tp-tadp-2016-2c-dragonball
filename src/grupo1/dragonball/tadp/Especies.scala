@@ -18,8 +18,6 @@ case class Monstruo(metodo:MetodoDeDigerir) extends Especie with Magico{
 
 case class Saiyajin(estado:Estado = Normal, tieneCola:Boolean = true) extends Especie
 
-
-
 abstract class Estado
 {
   def cargarKi(ki: Int) : Int =
@@ -33,6 +31,7 @@ abstract class Estado
   def aumentar(x:Saiyajin){}
 }
 
+
 case object Mono extends Estado
 {
    override def recibirAtaqueFilosa(saiyajin: Saiyajin)
@@ -43,6 +42,8 @@ case object Mono extends Estado
      saiyajin.estado = new Normal()
    }
 }
+
+case class GuerreroFusinado(invocador :Guerrero) extends Estado
 
 case class SuperSaiyajin(nivel: Int) extends Estado
 {
@@ -70,14 +71,6 @@ case object Normal extends Estado
        sayian.kiMaximo = sayian.kiMaximo * 5
      }
 }
-
-
-
-
-
-
-
-
 
 //metodos digestion
 trait MetodoDeDigerir

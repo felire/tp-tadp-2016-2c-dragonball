@@ -5,7 +5,7 @@ package grupo1.dragonball.tadp
 case class Guerrero(energia : Int, energiaMax:Int, items: List[item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
 {
   
-  def ejecutar(movimiento: Movimiento,atacado:Option[Guerrero])
+  def ejecutar(movimiento: Movimiento, atacado:Option[Guerrero])r
   {
     movimiento match
     {
@@ -31,6 +31,9 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[item], movimiento
     copy(especie = Monstruo(tipo.agregarMovimientos(movimientos)))
   }
   
+  def cambiarEstado(estadoR: EstadoPelea) = {
+    copy(estado = estadoR)
+  }
   def tengoItem(item:Item):Boolean=
   {
     items.contains(item)
