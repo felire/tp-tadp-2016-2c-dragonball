@@ -4,11 +4,12 @@ import scala.util.Try
 
 abstract class Item
 {
-   type f =(Guerrero, Guerrero)
-   def apply(guerreros :f) : Resultado
+   def apply(atacante :Guerrero,  atacado : Guerrero): Resultado
 }
 
-abstract class Arma extends Item
+abstract class Arma extends Item{
+
+}
 
 class Roma extends Arma
 {
@@ -32,7 +33,7 @@ class Filosa extends Arma
     {
       case Saiyajin(Mono,true) => Resultado(Try(atacante),Try(atacado.copy(energia = 1, especie = Saiyajin(Normal, false), estado = KO)))
       case Saiyajin(estado,true) => Resultado(Try(atacante),Try(atacado.copy(energia = 1, especie = Saiyajin(estado, false))))
-      case _ => Resultado(Try(atacante),Try(atacado.copy(energia = energia - kiARestar)))
+      case _ => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - kiARestar)))
     }
   }
     
@@ -52,9 +53,9 @@ class Fuego(var balas:Int) extends Arma
       balas-=1
       atacado.especie match
       {
-        case Humano => Resultado(Try(atacante),Try(atacado.copy(energia = energia - 20)))
+        case Humano => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - 20)))
         case Namekusein => atacado.estado match{
-          case KO => Resultado(Try(atacante),Try(atacado.copy(energia = energia - 10)))
+          case KO => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - 10)))
           case _ => Resultado(Try(atacante),Try(atacado))
         }
         case _ => Resultado(Try(atacante),Try(atacado))

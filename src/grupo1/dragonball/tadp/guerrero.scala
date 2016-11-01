@@ -2,10 +2,10 @@ package grupo1.dragonball.tadp
 
 
 
-case class Guerrero(energia : Int, energiaMax:Int, items: List[item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
+case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
 {
   
-  def ejecutar(movimiento: Movimiento, atacado:Option[Guerrero])r
+  /*def ejecutar(movimiento: Movimiento, atacado:Option[Guerrero])r
   {
     movimiento match
     {
@@ -21,7 +21,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[item], movimiento
       }
       case _ =>
     }
-  }
+  }*/
   
   def getMovimientos : List[Movimiento]={
     this.movimientos ++ especie.getMovimientos
