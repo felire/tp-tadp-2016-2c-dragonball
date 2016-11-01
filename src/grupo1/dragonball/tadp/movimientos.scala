@@ -1,72 +1,148 @@
 package grupo1.dragonball.tadp
 
-abstract class Movimiento{
-    def ejecutar(atacante: Guerrero, atacado: Guerrero)
+import scala.util.Try
+
+trait Movimiento{
+    def apply(atacante :Guerrero,  atacado : Guerrero) : Resultado
+    
 }
 
-case class DejarseFajar() extends Movimiento{
- def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
+case object DejarseFajar extends Movimiento{
+    def apply(atacante :Guerrero,  atacado : Guerrero)={
+      atacante.estado match{
+        case Luchando => new Resultado(atacante.copy(estado = Fajadas(1)),atacado)
+        case Fajadas(cantidad) => new Resultado(atacante.copy(estado = Fajadas(cantidad + 1)), atacado)
+        case _ => new Resultado(atacante, atacado)
+      }
+    }  
 }
 
-case class CargarKi() extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
+case object CargarKi extends Movimiento{  
+   def apply(atacante :Guerrero,  atacado : Guerrero)= {
+       atacante.especie match{
+        case Androide => new Resultado(Try(throw new Exception("Los androides no pueden cargar ki")),atacado)
+        case Saiyajin(SuperSaiyajin(nivel),_) => new Resultado(atacante.modificarEnergia(150*nivel), atacado)
+        case _ => new Resultado(atacante.modificarEnergia(100), atacado)
+      }
+   }
 }
 
 case class UsarItem(item: Item) extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    item.apply(atacante,atacado)
+  }
 }
 
-case class ComerseAlOponente() extends Movimiento{
-      def ejecutar(atacante: Guerrero, atacado: Guerrero){
-        atacante match{
-          case atacante:Monstruo => atacado match{
-            case atacado:GuerreroOrganico if(atacante.ki >= atacado.ki) => atacante.adquirirMovimientos(atacado.getMovimientos())
-            case atacado:Androide => atacante.adquirirMovimientos(atacado.getMovimientos())
-          }
+case object ComerseAlOponente extends Movimiento{
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    atacante.especie match{
+      case Monstruo(tipoDigestivo) => atacado.especie match{
+        case Androide => new Resultado(atacante.adquirirMovimientos(tipoDigestivo,atacado.movimientos), atacado)
+        case _ if(atacante.energia >= atacado.energia) => new Resultado(atacante.adquirirMovimientos(tipoDigestivo,atacado.movimientos),atacado)
+        case _ => new Resultado(atacante,atacado)
+      }
+      case _ => new Resultado(Try(throw new Exception("Solo los monstruos pueden comer")),atacado)
+    }
+  }
+}
+
+case object ConvertirseEnMono extends Movimiento
+{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+    atacante.especie match{
+      case Saiyajin(Normal, true) if(atacante.tengoItem(FotoDeLaLuna)) => new Resultado(atacante.copy(especie = Saiyajin(Mono, true)),atacado)
+      case Saiyajin(SuperSaiyajin(nivel),true) => new Resultado(atacante.copy(especie = Saiyajin(Mono,true), energiaMax = atacante.energiaMax/(5*nivel)),atacado)
+      case _ => new Resultado(Try(throw new Exception("No puede convertirse en mono")),atacado)
+    }
+  }
+}
+
+case object ConvertirseEnSuperSaiyajin extends Movimiento{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+    atacante.especie match
+    {
+      case Saiyajin(Normal,cola) if(atacante.energia > atacante.energiaMax/2) => new Resultado(atacante.copy(especie=Saiyajin(SuperSaiyajin(1),cola), energiaMax=atacante.energiaMax*5),atacado)
+      case Saiyajin(SuperSaiyajin(nivel),cola) if(atacante.energia > atacante.energiaMax/2)=> new Resultado(atacante.copy(especie=Saiyajin(SuperSaiyajin(nivel+1),cola),energiaMax=atacante.energiaMax*5*nivel),atacado)
+      case _ => new Resultado(Try(throw new Exception("No es Saiyajin")),atacado)
+    }
+  }
+}
+
+
+case class Fusion(companiero: Guerrero) extends Movimiento{
+   def apply(atacante: Guerrero, atacado: Guerrero)={
+    atacante.especie match{
+      case Humano | Namekusein | Saiyajin(_,_) =>  companiero.especie match{
+        case Humano | Namekusein | Saiyajin(_,_) => new Resultado(atacante.copy(especie = GuerreroFusionado(atacante),movimientos = atacante.getMovimientos ++ companiero.getMovimientos, energia = atacante.energia + companiero.energia, energiaMax = atacante.energiaMax + companiero.energiaMax),atacado)
+        case _ => new Resultado(Try(throw new Exception("No se pudo fusionar")), atacado)
+      }
+      case _ => new Resultado(Try(throw new Exception("No se pudo fusionar")), atacado)
+    }
+  }
+}
+
+case class Magia(poderMistico: (Guerrero,Guerrero)=>(Guerrero,Guerrero)) extends Movimiento{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+    val (atacanteMod, atacadoMod) = poderMistico(atacante, atacado)
+    atacante.especie match{
+      case Monstruo(_) | Namekusein => new Resultado(atacanteMod, atacadoMod)
+      case _ if(atacante.tieneEsferas) => new Resultado(atacanteMod, atacadoMod)
+      case _ => new Resultado(Try(throw new Exception("No se pudo tirar la magia")), atacado)
+    }
+  }
+}
+
+abstract class Ataque extends Movimiento
+
+case object Explotar extends Ataque{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+    atacante.especie match{
+      case Androide | Monstruo(_) => 
+        var mul = 0
+        atacante.especie match{
+          case Monstruo(_) => mul = 2
+          case Androide => mul = 3
         }
-  }
-}
-
-case class ConvertirseEnMono() extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    atacante match{
-      case atacante:Saiyajin if(atacante.tengoItem(new FotoDeLaLuna) && atacante.tieneCola) => atacante.estado = new Mono()
+        atacado.especie match{
+          case Namekusein => energiaNva = energiaNva max 1                  //NO ANDA
+        }
+        var energiaNva = 0 max (atacado.energia - atacante.energia * mul) 
+        val atacadoNvo = atacado.copy(energia = energiaNva)
+        val atacanteNvo = atacante.copy(energia = 0, estado = Muerto)
+        new Resultado(atacanteNvo,atacadoNvo)
+      case _ => new Resultado(Try(throw new Exception("No pudo explotar")), atacado)
     }
   }
 }
-
-case class ConvertirseEnSuperSaiyajin() extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero){
-    atacante match{
-      case atacante:Saiyajin if(atacante.ki > atacante.kiMaximo/2) => atacante.pasarNivel()  
-      case _ => 
-    }
+/*
+case object Onda extends Ataque{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+    
   }
 }
-
-case class Fusion() extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
+*/
+case object MuchosGolpesNinja extends Ataque{
+   def apply(atacante: Guerrero, atacado: Guerrero)={
+     
+     if(atacado.especie!= Androide && atacante.especie != Humano){
+       if(atacado.energia>atacante.energia){
+          new Resultado(atacante,atacado.copy(energia=atacado.energia-20))
+       }
+        else{
+          new Resultado(atacante.copy(energia=atacado.energia-20),atacado)      
+       }   
+     }
+     else{
+       new Resultado(atacante.copy(energia=atacado.energia-10), atacado)
+     }
+  }
 }
-
-case class Magia() extends Movimiento{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
-}
-
-abstract class Ataque extends Movimiento{
-
-}
-
-case class Explotar() extends Ataque{
- def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
-}
-
-case class Onda() extends Ataque{
-  def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
-}
-
-case class Genkidama() extends Ataque{
-   def ejecutar(atacante: Guerrero, atacado: Guerrero) = ???
-}
+/*
+case object Genkidama extends Ataque{
+   def apply(atacante: Guerrero, atacado: Guerrero)={
+    
+  }
+}*/
 
 
 

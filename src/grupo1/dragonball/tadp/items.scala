@@ -1,65 +1,88 @@
 package grupo1.dragonball.tadp
 
-abstract class Item{
-  def usar(propietario: Guerrero, atacado:Guerrero)
+import scala.util.Try
+
+abstract class Item
+{
+   def apply(atacante :Guerrero,  atacado : Guerrero): Resultado
 }
 
 abstract class Arma extends Item{
-  
+
 }
 
-class Roma extends Arma{
-  override def usar(propietario:Guerrero, atacado: Guerrero){
-    atacado match{
-      //case Androide(_, _, _) =>
-      case atacado:GuerreroOrganico => 
-        if(atacado.ki < 300){
-          atacado.conciente = true
-        }
+class Roma extends Arma
+{
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    atacado.especie match
+    {
+      case Androide => Resultado(Try(atacante),Try(atacado))
+      case _ if(atacado.energia < 300) => Resultado(Try(atacante),Try(atacado.cambiarEstado(KO)))
+      case _ => Resultado(Try(atacante),Try(atacado))
     }
   }
 }
 
 
-class Filosa extends Arma{
-  override def usar(propietario:Guerrero, atacado: Guerrero){
-    var kiARestar = propietario.asInstanceOf[GuerreroOrganico].ki/100
-    atacado match{
-      case atacado:Saiyajin => atacado.estado.recibirAtaqueFilosa(atacado)
-      //case atacado:Androide => 
-      case atacado:GuerreroOrganico => atacado.ki-=kiARestar
+class Filosa extends Arma
+{
+  
+    def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    var kiARestar = atacante.energia/100
+    atacado.especie match
+    {
+      case Saiyajin(Mono,true) => Resultado(Try(atacante),Try(atacado.copy(energia = 1, especie = Saiyajin(Normal, false), estado = KO)))
+      case Saiyajin(estado,true) => Resultado(Try(atacante),Try(atacado.copy(energia = 1, especie = Saiyajin(estado, false))))
+      case _ => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - kiARestar)))
     }
   }
+    
 }
 
-class Fuego(var balas:Int) extends Arma{
-  
-  def tieneBalas :Boolean={
+class Fuego(var balas:Int) extends Arma
+{
+  def tieneBalas :Boolean=
+  {
     balas>0
   }
   
-  override def usar(propietario:Guerrero, atacado:Guerrero){
-    if(tieneBalas){ //si no, falta tirar excepcion o algo
+  
+    def apply(atacante :Guerrero,  atacado : Guerrero) = {
+    if(tieneBalas)
+    {//si no, falta tirar excepcion o algo
       balas-=1
-      atacado match{
-      case atacado:Humano => atacado.ki -= 20
-      case atacado:Namekusein if(!atacado.conciente) => atacado.ki -= 10      
+      atacado.especie match
+      {
+        case Humano => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - 20)))
+        case Namekusein => atacado.estado match{
+          case KO => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - 10)))
+          case _ => Resultado(Try(atacante),Try(atacado))
+        }
+        case _ => Resultado(Try(atacante),Try(atacado))
       }
     }
-  }
-}
-
-class SemillaErmitanio extends Item{
-  override def usar(propietario:Guerrero, nada: Guerrero){
-    propietario match{
-      case propietario:GuerreroOrganico => propietario.ki = propietario.kiMaximo
+    else{
+      Resultado(Try(throw new Exception("El arma no tiene balas")),Try(atacado))
     }
   }
 }
 
-class FotoDeLaLuna extends Item{
-    override def usar(propietario:Guerrero, nada: Guerrero){
-    }
+class SemillaErmitanio extends Item
+{
+    def apply(atacante :Guerrero,  atacado : Guerrero) = {
+      atacante.especie match{
+        case Androide => Resultado(Try(throw new Exception("Un androide no debe comer semillas")),Try(atacado))
+        case _ => Resultado(Try(atacante.copy(energia = atacante.energiaMax)),Try(atacado))
+      }
+  }
 }
 
+object FotoDeLaLuna extends Item
+{
+    def apply(atacante :Guerrero,  atacado : Guerrero) = ???
+}
+
+class EsferaDelDragon(val estrella: Int) extends Item{
+    def apply(atacante :Guerrero,  atacado : Guerrero) = ???
+}
 
