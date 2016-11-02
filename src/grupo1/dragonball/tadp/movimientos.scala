@@ -97,19 +97,18 @@ abstract class Ataque extends Movimiento
 case object Explotar extends Ataque{
   def apply(atacante: Guerrero, atacado: Guerrero)={
     atacante.especie match{
-      case Androide | Monstruo(_) => 
+      case Androide | Monstruo(_) =>
+        var energiaNva = 0
         var mul = 0
         atacante.especie match{
           case Monstruo(_) => mul = 2
           case Androide => mul = 3
         }
+        energiaNva = 0 max (atacado.energia - atacante.energia * mul)
         atacado.especie match{
-          case Namekusein => energiaNva = energiaNva max 1                  //NO ANDA
+          case Namekusein => energiaNva = energiaNva max 1
         }
-        var energiaNva = 0 max (atacado.energia - atacante.energia * mul) 
-        val atacadoNvo = atacado.copy(energia = energiaNva)
-        val atacanteNvo = atacante.copy(energia = 0, estado = Muerto)
-        new Resultado(atacanteNvo,atacadoNvo)
+        new Resultado(atacante.copy(energia = 0, estado = Muerto),atacado.copy(energia = energiaNva))
       case _ => new Resultado(Try(throw new Exception("No pudo explotar")), atacado)
     }
   }
@@ -123,18 +122,18 @@ case object Onda extends Ataque{
 */
 case object MuchosGolpesNinja extends Ataque{
    def apply(atacante: Guerrero, atacado: Guerrero)={
-     
-     if(atacado.especie!= Androide && atacante.especie != Humano){
-       if(atacado.energia>atacante.energia){
-          new Resultado(atacante,atacado.copy(energia=atacado.energia-20))
+     atacante.especie match{
+       case Humano => atacado.especie match{
+         case Androide => new Resultado(atacante.copy(energia=atacante.energia-10), atacado)
+         case _ => verificarEnergias (atacante,atacado)
        }
-        else{
-          new Resultado(atacante.copy(energia=atacado.energia-20),atacado)      
-       }   
+       case _ => verificarEnergias (atacante,atacado)
      }
-     else{
-       new Resultado(atacante.copy(energia=atacado.energia-10), atacado)
-     }
+  }
+   
+  def verificarEnergias (atacante:Guerrero, atacado:Guerrero) :Resultado={
+    if (atacado.energia > atacante.energia) return new Resultado(atacante.copy(energia=atacante.energia-20),atacado)
+    else return new Resultado(atacante,atacado.copy(energia=atacado.energia-20))
   }
 }
 /*
