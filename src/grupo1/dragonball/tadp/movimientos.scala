@@ -125,15 +125,18 @@ case object MuchosGolpesNinja extends Ataque{
      atacante.especie match{
        case Humano => atacado.especie match{
          case Androide => new Resultado(atacante.copy(energia=atacante.energia-10), atacado)
-         case _ => verificarEnergias (atacante,atacado)
+         case _ => verificarEnergias(atacante,atacado)
        }
        case _ => verificarEnergias (atacante,atacado)
      }
   }
    
   def verificarEnergias (atacante:Guerrero, atacado:Guerrero) :Resultado={
-    if (atacado.energia > atacante.energia) return new Resultado(atacante.copy(energia=atacante.energia-20),atacado)
-    else return new Resultado(atacante,atacado.copy(energia=atacado.energia-20))
+    atacante.energia max atacado.energia match{
+           case atacante.energia => new Resultado(atacante,atacado.copy(energia=atacado.energia-20))
+           case atacado.energia => new Resultado(atacante.copy(energia=atacante.energia-20),atacado)
+           case _ => new Resultado (Try(throw new Exception("No se pudo golpear")), atacado)
+    }
   }
 }
 /*
