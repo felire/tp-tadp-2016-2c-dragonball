@@ -25,3 +25,6 @@ project/plugins/project/
 .project
 .settings/
 /bin/
+.cache-main
+.cache-tests
+
