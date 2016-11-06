@@ -54,5 +54,11 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
     copy(energia = energia + energy)
   }
   
+   def movimientoMasEfectivoContra(atacado: Guerrero)(unCriterio: (Guerrero,Guerrero) => Int): Movimiento = {
+    //movimientos.maxByOptionable( mov => unCriterio(mov(this,oponente)))
+      movimientos.maxBy { mov => 
+        unCriterio(atacado, (mov.apply(this, atacado).atacado.getOrElse(atacado)))}
+   }
+  
 }
 

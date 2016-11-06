@@ -19,3 +19,5 @@ case class Resultado (atacante : Try[Guerrero], atacado : Try[Guerrero]) {
    def this (atacante : Guerrero, atacado : Guerrero) = this (Try(atacante), Try(atacado))
    def this (atacante : Try[Guerrero], atacado : Guerrero) = this (atacante, Try(atacado)) 
 }
+
+
