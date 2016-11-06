@@ -4,7 +4,7 @@ import scala.util.Try
 
 abstract class Item
 {
-   def apply(atacante :Guerrero,  atacado : Guerrero): Resultado
+   def apply(atacante :Guerrero,  atacado : Guerrero): Resultado2
 }
 
 abstract class Arma extends Item{
@@ -16,9 +16,9 @@ class Roma extends Arma
   def apply(atacante :Guerrero,  atacado : Guerrero) = {
     atacado.especie match
     {
-      case Androide => Resultado(Try(atacante),Try(atacado))
-      case _ if(atacado.energia < 300) => Resultado(Try(atacante),Try(atacado.cambiarEstado(KO)))
-      case _ => Resultado(Try(atacante),Try(atacado))
+      case Androide => Peleando(atacante,atacado)
+      case _ if(atacado.energia < 300) => Peleando(atacante,atacado.cambiarEstado(KO))
+      case _ => Peleando(atacante,atacado)
     }
   }
 }
@@ -31,9 +31,9 @@ class Filosa extends Arma
     var kiARestar = atacante.energia/100
     atacado.especie match
     {
-      case Saiyajin(Mono,true) => Resultado(Try(atacante),Try(atacado.copy(energia = 1, especie = Saiyajin(Normal, false), estado = KO)))
-      case Saiyajin(estado,true) => Resultado(Try(atacante),Try(atacado.copy(energia = 1, especie = Saiyajin(estado, false))))
-      case _ => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - kiARestar)))
+      case Saiyajin(Mono,true) => Peleando(atacante,atacado.copy(energia = 1, especie = Saiyajin(Normal, false), estado = KO))
+      case Saiyajin(estado,true) => Peleando(atacante,atacado.copy(energia = 1, especie = Saiyajin(estado, false)))
+      case _ => Peleando(atacante,atacado.copy(energia = atacado.energia - kiARestar))
     }
   }
     
@@ -53,16 +53,16 @@ class Fuego(var balas:Int) extends Arma
       balas-=1
       atacado.especie match
       {
-        case Humano => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - 20)))
+        case Humano => Peleando(atacante,atacado.copy(energia = atacado.energia - 20))
         case Namekusein => atacado.estado match{
-          case KO => Resultado(Try(atacante),Try(atacado.copy(energia = atacado.energia - 10)))
-          case _ => Resultado(Try(atacante),Try(atacado))
+          case KO => Peleando(atacante,atacado.copy(energia = atacado.energia - 10))
+          case _ => Peleando(atacante,atacado)
         }
-        case _ => Resultado(Try(atacante),Try(atacado))
+        case _ => Peleando(atacante,atacado)
       }
     }
     else{
-      Resultado(Try(throw new Exception("El arma no tiene balas")),Try(atacado))
+      Fallo("El arma no tiene balas")
     }
   }
 }
@@ -71,8 +71,8 @@ class SemillaErmitanio extends Item
 {
     def apply(atacante :Guerrero,  atacado : Guerrero) = {
       atacante.especie match{
-        case Androide => Resultado(Try(throw new Exception("Un androide no debe comer semillas")),Try(atacado))
-        case _ => Resultado(Try(atacante.copy(energia = atacante.energiaMax)),Try(atacado))
+        case Androide => Fallo("Un androide no debe comer semillas")
+        case _ => Peleando(atacante.copy(energia = atacante.energiaMax),atacado)
       }
   }
 }
