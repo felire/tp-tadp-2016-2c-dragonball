@@ -4,9 +4,9 @@ import scala.util.Try
 
 
 abstract class Resultado2
-
+//Son flatMap, para que sean maps, deberian devolver guerreros o algo similar
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado2{
-  def map(f:(Guerrero,Guerrero) => (Guerrero,Guerrero)) = {
+  def flatmap(f:Movimiento) = {
     atacante.estado match {
       case KO => this
       case Muerto => Ganador(atacado)
@@ -20,9 +20,9 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado2{
 }
 
 case class Fallo(error:String) extends Resultado2{ //Si hubo un error que sentido tiene guardar el estado de los guerreros?
-  def map(f:(Guerrero,Guerrero) => (Guerrero,Guerrero)) = this
+  def flatmap(f:Movimiento) = this
 }
 
 case class Ganador(ganador: Guerrero) extends Resultado2{
-  def map(f:(Guerrero,Guerrero) => (Guerrero,Guerrero)) = this
+  def flatmap(f:Movimiento) = this
 }
