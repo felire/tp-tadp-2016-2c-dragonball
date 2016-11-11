@@ -4,7 +4,7 @@ import scala.util.Try
 
 
 abstract class Resultado
-//Son flatMap, para que sean maps, deberian devolver guerreros o algo similar
+
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   def flatmap(f:Movimiento) = {
     atacante.estado match {

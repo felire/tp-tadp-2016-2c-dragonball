@@ -46,11 +46,9 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        case Peleando(atacante, atacado) => 
          Peleando(atacado, atacante).flatmap(atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles)) match{
            case Peleando(atacado, atacante) => Peleando(atacante, atacado)
-           case Fallo(desc) => Fallo(desc)
-           case Ganador(gan) => Ganador(gan)
+           case otro => otro
        }
-       case Fallo(desc) => Fallo(desc)
-       case Ganador(gan) => Ganador(gan)
+       case otro => otro
      }
    }
 }
