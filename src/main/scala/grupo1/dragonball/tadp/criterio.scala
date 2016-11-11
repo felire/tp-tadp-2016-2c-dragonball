@@ -1,36 +1,43 @@
 package grupo1.dragonball.tadp
 
 trait Criterio{
-  def apply(antes :Guerrero,  despues : Guerrero) : Int    
+  def apply(atacante:Guerrero,atacado:Guerrero,movimiento:Movimiento): Double    
 }
 
-case object favoreceKi extends Criterio{
-  def apply(antes: Guerrero, despues: Guerrero): Int = {
-    antes.energia - despues.energia 
+case object oponentesDebiles extends Criterio{
+  def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Double = {
+    movimiento(atacante,atacado) match{
+      case Peleando(_,atacadoDespues)=>atacado.energia-atacadoDespues.energia
+      case _ =>0
+    }    
   }
 }
 
-case object noFavoreceKi extends Criterio{
-  def apply(antes: Guerrero, despues: Guerrero) : Int ={
-    favoreceKi(antes, despues)*(-1)    
+case object oponentesFuertes extends Criterio{
+  def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Double = {
+    movimiento(atacante,atacado) match{
+      case Peleando(_,atacadoDespues)=>(-1)/(atacadoDespues.energia-atacado.energia) //hago una hiperbola, para que siempre sea mayor a cero
+      case _ =>0
+    }    
   }
 }
 
 case object tacanio extends Criterio{
-  def apply(antes: Guerrero, despues: Guerrero) :Int ={
-    despues.items.size - antes.items.size
+  def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Double = {
+    movimiento(atacante,atacado) match{
+      case Peleando(atacanteDespues,_)=>(-1)/(atacanteDespues.items.size-atacante.items.size)//mismo aca
+      case _ =>0
+    }    
   }
 }
 
 
-// ATENCIONNNNN, ATENCIONNNNNNNNNNNN
-// Fijense si lo de abajo funca...
-//porque me parece que con el match de mejorCriterio el despues nunca puede quedar muerto, entonces nunca entra
-case object queNoLoMate extends Criterio{ //el de Krillin... No se si hacia falta
-  def apply(antes: Guerrero, despues: Guerrero) :Int ={
-    despues.estado match{
-      case Muerto => -5646548
-      case _ => 1000000
-    }
+case object queNoLoMate extends Criterio{
+  def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Double = {
+    movimiento(atacante,atacado) match{
+      case Peleando(_,_)=>1
+      case Ganador(_) =>0
+      case _ =>(-1)
+    }    
   }
 }
