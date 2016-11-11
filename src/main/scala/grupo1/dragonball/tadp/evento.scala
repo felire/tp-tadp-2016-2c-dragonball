@@ -3,9 +3,9 @@ package grupo1.dragonball.tadp
 import scala.util.Try
 
 
-abstract class Resultado2
+abstract class Resultado
 //Son flatMap, para que sean maps, deberian devolver guerreros o algo similar
-case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado2{
+case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   def flatmap(f:Movimiento) = {
     atacante.estado match {
       case KO => this
@@ -19,10 +19,10 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado2{
   }
 }
 
-case class Fallo(error:String) extends Resultado2{ //Si hubo un error que sentido tiene guardar el estado de los guerreros?
+case class Fallo(error:String) extends Resultado{ //Si hubo un error que sentido tiene guardar el estado de los guerreros?
   def flatmap(f:Movimiento) = this
 }
 
-case class Ganador(ganador: Guerrero) extends Resultado2{
+case class Ganador(ganador: Guerrero) extends Resultado{
   def flatmap(f:Movimiento) = this
 }

@@ -2,17 +2,14 @@ package grupo1.dragonball.tadp
 
 import scala.util.Try
 
-abstract class Item
-{
-   def apply(atacante :Guerrero,  atacado : Guerrero): Resultado2
+abstract class Item{ 
+  def apply(atacante :Guerrero,  atacado : Guerrero): Resultado
 }
 
-abstract class Arma extends Item{
+abstract class Arma extends Item
 
-}
-
-class Roma extends Arma
-{
+class Roma extends Arma{
+  
   def apply(atacante :Guerrero,  atacado : Guerrero) = {
     atacado.especie match
     {
@@ -24,35 +21,28 @@ class Roma extends Arma
 }
 
 
-class Filosa extends Arma
-{
+class Filosa extends Arma{
   
-    def apply(atacante :Guerrero,  atacado : Guerrero) = {
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
     var kiARestar = atacante.energia/100
-    atacado.especie match
-    {
+    
+    atacado.especie match{
       case Saiyajin(Mono,true) => Peleando(atacante,atacado.copy(energia = 1, especie = Saiyajin(Normal, false), estado = KO))
       case Saiyajin(estado,true) => Peleando(atacante,atacado.copy(energia = 1, especie = Saiyajin(estado, false)))
       case _ => Peleando(atacante,atacado.copy(energia = atacado.energia - kiARestar))
     }
-  }
-    
+  }    
 }
 
-class Fuego(var balas:Int) extends Arma
-{
-  def tieneBalas :Boolean=
-  {
-    balas>0
-  }
+class Fuego(var balas:Int) extends Arma{
   
+  def tieneBalas :Boolean= balas>0
   
-    def apply(atacante :Guerrero,  atacado : Guerrero) = {
+  def apply(atacante :Guerrero,  atacado : Guerrero) = {
     if(tieneBalas)
-    {//si no, falta tirar excepcion o algo
-      balas-=1
-      atacado.especie match
-      {
+    {
+      this.balas = this.balas - 1
+      atacado.especie match{
         case Humano => Peleando(atacante,atacado.copy(energia = atacado.energia - 20))
         case Namekusein => atacado.estado match{
           case KO => Peleando(atacante,atacado.copy(energia = atacado.energia - 10))
@@ -67,8 +57,7 @@ class Fuego(var balas:Int) extends Arma
   }
 }
 
-class SemillaErmitanio extends Item
-{
+class SemillaErmitanio extends Item{
     def apply(atacante :Guerrero,  atacado : Guerrero) = {
       atacante.especie match{
         case Androide => Fallo("Un androide no debe comer semillas")
@@ -77,12 +66,11 @@ class SemillaErmitanio extends Item
   }
 }
 
-object FotoDeLaLuna extends Item
-{
-    def apply(atacante :Guerrero,  atacado : Guerrero) = ???
+object FotoDeLaLuna extends Item{
+  def apply(atacante :Guerrero,  atacado : Guerrero) = ???
 }
 
 class EsferaDelDragon(val estrella: Int) extends Item{
-    def apply(atacante :Guerrero,  atacado : Guerrero) = ???
+  def apply(atacante :Guerrero,  atacado : Guerrero) = ???
 }
 

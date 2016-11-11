@@ -3,22 +3,21 @@ package grupo1.dragonball.tadp
 import scala.util.Try
 
 trait Movimiento{
-    def apply(atacante :Guerrero,  atacado : Guerrero) : Resultado2
-    
+  def apply(atacante :Guerrero,  atacado : Guerrero) : Resultado    
 }
 
 case object DejarseFajar extends Movimiento{
-    def apply(atacante :Guerrero,  atacado : Guerrero)={
-      atacante.estado match{
-        case Luchando => Peleando(atacante.copy(estado = Fajadas(1)),atacado)
-        case Fajadas(cantidad) => Peleando(atacante.copy(estado = Fajadas(cantidad + 1)), atacado)
-        case _ => Peleando(atacante, atacado)
-      }
-    }  
+  def apply(atacante :Guerrero,  atacado : Guerrero)={
+    atacante.estado match{
+      case Luchando => Peleando(atacante.copy(estado = Fajadas(1)),atacado)
+      case Fajadas(cantidad) => Peleando(atacante.copy(estado = Fajadas(cantidad + 1)), atacado)
+      case _ => Peleando(atacante, atacado)
+    }
+  }  
 }
 
 case object CargarKi extends Movimiento{  
-   def apply(atacante :Guerrero,  atacado : Guerrero)= {
+  def apply(atacante :Guerrero,  atacado : Guerrero)= {
        atacante.especie match{
         case Androide => Fallo("Los androides no pueden cargar ki")
         case Saiyajin(SuperSaiyajin(nivel),_) => Peleando(atacante.modificarEnergia(150*nivel), atacado)
@@ -34,6 +33,7 @@ case class UsarItem(item: Item) extends Movimiento{
 }
 
 case object ComerseAlOponente extends Movimiento{
+  
   def apply(atacante :Guerrero,  atacado : Guerrero) = {
     atacante.especie match{
       case Monstruo(tipoDigestivo) => atacado.especie match{
@@ -46,8 +46,8 @@ case object ComerseAlOponente extends Movimiento{
   }
 }
 
-case object ConvertirseEnMono extends Movimiento
-{
+case object ConvertirseEnMono extends Movimiento{
+
   def apply(atacante: Guerrero, atacado: Guerrero)={
     atacante.especie match{
       case Saiyajin(Normal, true) if(atacante.tengoItem(FotoDeLaLuna)) => Peleando(atacante.copy(especie = Saiyajin(Mono, true)),atacado)
@@ -113,15 +113,9 @@ case object Explotar extends Ataque{
     }
   }
 }
-/*
-case object Onda extends Ataque{
-  def apply(atacante: Guerrero, atacado: Guerrero)={
-    
-  }
-}
-*/
+
 case object MuchosGolpesNinja extends Ataque{
-   def apply(atacante: Guerrero, atacado: Guerrero)={
+  def apply(atacante: Guerrero, atacado: Guerrero)={
      atacante.especie match{
        case Humano => atacado.especie match{
          case Androide => Peleando(atacante.copy(energia=atacante.energia-10), atacado)
@@ -130,8 +124,8 @@ case object MuchosGolpesNinja extends Ataque{
        case _ => verificarEnergias (atacante,atacado)
      }
   }
-   
-  def verificarEnergias(atacante:Guerrero, atacado:Guerrero) :Resultado2={
+ 
+  def verificarEnergias(atacante:Guerrero, atacado:Guerrero) :Resultado={
     atacante.energia max atacado.energia match{
            case atacante.energia => Peleando(atacante,atacado.copy(energia=atacado.energia-20))
            case atacado.energia => Peleando(atacante.copy(energia=atacante.energia-20),atacado)
@@ -139,12 +133,28 @@ case object MuchosGolpesNinja extends Ataque{
     }
   }
 }
-/*
-case object Genkidama extends Ataque{
-   def apply(atacante: Guerrero, atacado: Guerrero)={
-    
+
+
+case class Onda(kiNecesario : Int) extends Ataque{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+    atacante.energia max this.kiNecesario match{
+      case this.kiNecesario => Fallo("El atacante no tiene la energia necesaria")
+      case atacante.energia => atacado.especie match{
+        case Monstruo(_) => Peleando(atacante.copy(energia=atacante.energia-this.kiNecesario), atacado.copy(energia=atacado.energia-(this.kiNecesario/2)))
+        case _ => Peleando(atacante.copy(energia=atacante.energia-this.kiNecesario), atacado.copy(energia=atacado.energia-(this.kiNecesario*2)))
+      }
+    }
   }
-}*/
+}
+
+case object Genkidama extends Ataque{
+  def apply(atacante: Guerrero, atacado: Guerrero)={
+     atacante.estado match {
+       case Fajadas(cantidad) => Peleando(atacante.copy(estado=Luchando),atacado.copy(energia=atacado.energia-(10^cantidad)))
+       case _ => Fallo("El atacante no junto energia de su entorno")
+     }
+  }
+}
 
 
 
