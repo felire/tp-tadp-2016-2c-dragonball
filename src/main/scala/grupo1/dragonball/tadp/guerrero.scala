@@ -44,7 +44,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
    def pelearRound(mov:Movimiento, oponente: Guerrero): Resultado = {
      Peleando(this, oponente).flatmap(mov)
                              .invertir() match{
-       case Peleando(atacante, atacado) => Peleando(atacante, atacado).flatmap(atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles))
+       case Peleando(atacante, atacado) => Peleando(atacante, atacado).flatmap(atacante.movimientoMasEfectivoContra(atacado)(oponentesDebiles))
                                                                       .invertir()
        case otro => otro
      }
