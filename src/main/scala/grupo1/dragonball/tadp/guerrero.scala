@@ -72,5 +72,12 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        pelea.pelearRound(movimiento)
      }
    }
+   
+  def pelearContra2(oponente: Guerrero,rounds: Int, criterio: Criterio): Resultado = {
+     val peleaInicial: Resultado = Peleando(this,oponente)
+     (1 to rounds).foldLeft(peleaInicial){(fight, round) =>
+       fight.pelearRound(MejorAtaque(criterio))
+     }
+   }/*hace lo mismo que planDeAtaque y pelearContra juntos, sin Try ni nunca romper la caja*/
 }
 
