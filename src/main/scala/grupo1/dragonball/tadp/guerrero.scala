@@ -40,18 +40,8 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
    def movimientoMasEfectivoContra(atacado: Guerrero)(unCriterio: Criterio): Movimiento = {
       movimientos.maxBy{ mov => unCriterio(this,atacado,mov)}
    }
-    
-
+       
    def pelearRound(mov:Movimiento, oponente: Guerrero): Resultado = {
-     Peleando(this, oponente).flatmap(mov)
-                             .invertir() match{
-       case Peleando(atacante, atacado) => Peleando(atacante, atacado).flatmap(atacante.movimientoMasEfectivoContra(atacado)(oponentesDebiles))
-                                                                      .invertir()
-       case otro => otro
-     }
-   }
-   
-   def pelearRoundConContra(mov:Movimiento, oponente: Guerrero): Resultado = {
      Peleando(this, oponente).flatmap(mov).flatmap(ContraAtacar)
    }
    
