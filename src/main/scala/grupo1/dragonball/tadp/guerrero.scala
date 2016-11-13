@@ -41,17 +41,20 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
       movimientos.maxBy{ mov => unCriterio(this,atacado,mov)}
    }
     
-
-   def pelearRound(mov:Movimiento, oponente: Guerrero): Resultado = {
-     Peleando(this, oponente).flatmap(mov)
-                             .invertir() match{
-       case Peleando(atacante, atacado) => Peleando(atacante, atacado).flatmap(atacante.movimientoMasEfectivoContra(atacado)(oponentesDebiles))
-                                                                      .invertir()
-       case otro => otro
-     }
+   def deleteMov(movimiento: Movimiento) ={
+     copy(movimientos = this.movimientos.filter { mov => !mov.equals(movimiento) }) //scala no tiene delete en listas inmutables
    }
+    def movimientoMasEfectivoContraOption(atacado: Guerrero)(unCriterio: Criterio): Option[Movimiento] = {
+      if (movimientos.length > 0){
+        Some(movimientos.maxBy{ mov => unCriterio(this,atacado,mov)})
+      }
+      else{
+        None
+      }
+   }
+
    
-   def pelearRoundConContra(mov:Movimiento, oponente: Guerrero): Resultado = {
+   def pelearRound(mov:Movimiento, oponente: Guerrero): Resultado = {
      Peleando(this, oponente).flatmap(mov).flatmap(ContraAtacar)
    }
    
