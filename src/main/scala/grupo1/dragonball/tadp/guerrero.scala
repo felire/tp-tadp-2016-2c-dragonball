@@ -73,5 +73,11 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        case _ => Try(movs)
      }
    }
+   
+   def pelearContra(oponente: Guerrero, planAtaque: List[Movimiento]): Resultado = {
+     planAtaque.foldLeft(Peleando(this, oponente) : Resultado){(pelea, movimiento) =>
+       pelea.flatmap(movimiento)
+     }
+   }
 }
 
