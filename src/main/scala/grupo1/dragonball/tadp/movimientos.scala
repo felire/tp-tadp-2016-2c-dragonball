@@ -26,6 +26,12 @@ case object CargarKi extends Movimiento{
    }
 }
 
+case object ContraAtacar extends Movimiento{
+  def apply(atacante :Guerrero,  atacado : Guerrero)= {
+       atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles).apply(atacado, atacante)
+   } 
+}
+
 case class UsarItem(item: Item) extends Movimiento{
   def apply(atacante :Guerrero,  atacado : Guerrero) = {
     item.apply(atacante,atacado)
