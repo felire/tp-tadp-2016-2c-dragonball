@@ -124,12 +124,18 @@ class test {
      monstruo.ejecutar(new ComerseAlOponente, atacado2)
     assertEquals(1,monstruo.getMovimientos().length)
   }  
-   */
+   
   @Test
   def testt() = {
     var r = 1 max 2
     assertEquals(1,r)
-  }  
+  }  */
+    @Test
+  def testtt() = {
+    var list = List(): List[Movimiento]
+    list = list.+:(null)
+    assertEquals(1,list.length)
+  } 
    
 }
 

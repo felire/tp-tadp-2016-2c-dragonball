@@ -54,16 +54,12 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
    }
    
    def planDeAtaque(oponente: Guerrero, rounds: Int)(criterio: Criterio): Try[List[Movimiento]] = {
-     val pelea: Resultado = Peleando(this,oponente)
-     val movimientos = List(): List[Movimiento]
-     val (resultado, movs) = (1 to rounds).foldLeft(pelea,movimientos){(peleasYMovs, round) =>
-       val (peleaa,movimientoss) = peleasYMovs
-       peleaa match{
-         case Peleando(atacante, atacado) => 
-           val mov = atacante.movimientoMasEfectivoContra(atacado)(criterio)
-           (peleaa.pelearRound(mov), movimientos.+:(mov))
-         case otro => (peleaa, movimientos)
-       }
+     val peleaInicial: Resultado = Peleando(this,oponente)
+     val movsInicial = List(): List[Movimiento]
+     val (resultado, movs) = (1 to rounds).foldLeft(peleaInicial,movsInicial){(peleaYMovs, round) =>
+       val (pelea,movimientos) = peleaYMovs
+       val mov = pelea.mejorMov(criterio)
+       (pelea.pelearRound(mov),movimientos.+:(mov))
      }
      resultado match{
        case Fallo(_) => Try(throw new Exception("La pelea a fallado"))

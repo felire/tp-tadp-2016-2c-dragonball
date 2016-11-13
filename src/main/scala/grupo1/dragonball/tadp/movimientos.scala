@@ -34,6 +34,14 @@ case object ContraAtacar extends Movimiento{
    } 
 }
 
+case class MejorAtaque(criterio : Criterio) extends Movimiento{
+  def apply(atacante :Guerrero,  atacado : Guerrero)= {
+       val mov = atacante.movimientoMasEfectivoContra(atacado)(criterio)
+       val atac = atacante.deleteMov(mov)
+       mov.apply(atac, atacado)
+   } 
+}
+
 case class UsarItem(item: Item) extends Movimiento{
   def apply(atacante :Guerrero,  atacado : Guerrero) = {
     item.apply(atacante,atacado)
