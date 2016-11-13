@@ -6,6 +6,7 @@ import scala.util.Try
 abstract class Resultado{
   def invertir() : Resultado
   def flatmap(f:Movimiento) : Resultado
+  def pelearRound(f:Movimiento): Resultado
 }
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
@@ -24,14 +25,20 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   def invertir():Resultado={
     Peleando(atacado, atacante)
   }
+  
+  def pelearRound(f:Movimiento) = {
+    atacante.pelearRoundConContra(f, atacado)
+  }
 }
 
 case class Fallo(error:String) extends Resultado{ //Si hubo un error que sentido tiene guardar el estado de los guerreros?
   def flatmap(f:Movimiento) = this
   def invertir() = this
+  def pelearRound (f:Movimiento) = this
 }
 
 case class Ganador(ganador: Guerrero) extends Resultado{
   def flatmap(f:Movimiento) = this
   def invertir() = this
+  def pelearRound (f:Movimiento) = this
 }

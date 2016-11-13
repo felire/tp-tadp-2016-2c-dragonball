@@ -64,7 +64,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        peleaa match{
          case Peleando(atacante, atacado) => 
            val mov = atacante.movimientoMasEfectivoContra(atacado)(criterio)
-           (peleaa.flatmap(mov), movimientos.+:(mov))
+           (peleaa.pelearRound(mov), movimientos.+:(mov))
          case otro => (peleaa, movimientos)
        }
      }
@@ -76,7 +76,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
    
    def pelearContra(oponente: Guerrero, planAtaque: List[Movimiento]): Resultado = {
      planAtaque.foldLeft(Peleando(this, oponente) : Resultado){(pelea, movimiento) =>
-       pelea.flatmap(movimiento)
+       pelea.pelearRound(movimiento)
      }
    }
 }
