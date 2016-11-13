@@ -10,12 +10,12 @@ abstract class Resultado{
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   def flatmap(f:Movimiento) = {
-    atacante.estado match {
+    atacado.estado match {
       case KO => this
-      case Muerto => Ganador(atacado)
-      case _ => atacado.estado match{
+      case Muerto => Ganador(atacante)
+      case _ => atacante.estado match{
         case KO => this
-        case Muerto => Ganador(atacante)
+        case Muerto => Ganador(atacado)
         case _ => f(atacante, atacado)
       }
     }
