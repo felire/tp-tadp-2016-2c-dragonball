@@ -15,7 +15,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
       case _ => atacante.estado match{
         case KO => this
         case Muerto => Ganador(atacado)
-        case _ => f(atacante, atacado)
+        case _ => f(atacante.deleteMov(f), atacado)
       }
     }
   }

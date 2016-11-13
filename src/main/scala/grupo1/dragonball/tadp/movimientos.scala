@@ -28,7 +28,9 @@ case object CargarKi extends Movimiento{
 
 case object ContraAtacar extends Movimiento{
   def apply(atacante :Guerrero,  atacado : Guerrero)= {
-       atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles).apply(atacado, atacante)
+       val mov = atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles)
+       val atac = atacado.deleteMov(mov)
+       mov.apply(atac, atacante)
    } 
 }
 

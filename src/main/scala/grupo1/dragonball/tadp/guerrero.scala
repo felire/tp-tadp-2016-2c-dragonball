@@ -38,15 +38,22 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
   }
   
    def movimientoMasEfectivoContra(atacado: Guerrero)(unCriterio: Criterio): Movimiento = {
-      movimientos.maxBy{ mov => unCriterio(this,atacado,mov)}
+      getMovimientos.maxBy{ mov => unCriterio(this,atacado,mov)}
    }
-       
+
+   def deleteMov(movimiento: Movimiento) ={
+     copy(movimientos = this.movimientos.filter { mov => !mov.equals(movimiento) })
+   }
+   
+   def movimientoMasEfectivoContraOption(atacado: Guerrero)(unCriterio: Criterio): Option[Movimiento] = {
+     Try(movimientos.maxBy{ mov => unCriterio(this,atacado,mov)}).toOption
+   }
+
    def pelearRound(mov:Movimiento, oponente: Guerrero): Resultado = {
      Peleando(this, oponente).flatmap(mov).flatmap(ContraAtacar)
    }
    
    def planDeAtaque(oponente: Guerrero, rounds: Int)(criterio: Criterio): Try[List[Movimiento]] = {
-     //val (movimientos,pelea) = (List(): List[Movimiento],Peleando(this, oponente))
      val pelea: Resultado = Peleando(this,oponente)
      val movimientos = List(): List[Movimiento]
      val (resultado, movs) = (1 to rounds).foldLeft(pelea,movimientos){(peleasYMovs, round) =>
