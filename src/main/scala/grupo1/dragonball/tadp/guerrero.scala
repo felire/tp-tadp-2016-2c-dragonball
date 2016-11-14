@@ -63,7 +63,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
      }
      resultado match{
        case Fallo(_) => Try(throw new Exception("La pelea a fallado"))
-       case _ => Try(movs)
+       case _ => Try(movs.takeWhile { elem => elem != null }) /*santi: hay que mejorar esto*/
      }
    }
    
