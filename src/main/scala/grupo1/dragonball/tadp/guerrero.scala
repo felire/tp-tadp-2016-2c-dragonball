@@ -53,18 +53,15 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
      Peleando(this, oponente).flatmap(mov).flatmap(ContraAtacar)
    }
    
-   def planDeAtaque(oponente: Guerrero, rounds: Int)(criterio: Criterio): Try[List[Movimiento]] = {
+   def planDeAtaque(oponente: Guerrero, rounds: Int)(criterio: Criterio): List[Movimiento] = {
      val peleaInicial: Resultado = Peleando(this,oponente)
      val movsInicial = List(): List[Movimiento]
      val (resultado, movs) = (1 to rounds).foldLeft(peleaInicial,movsInicial){(peleaYMovs, round) =>
        val (pelea,movimientos) = peleaYMovs
-       val mov = pelea.mejorMov(criterio)
-       (pelea.pelearRound(mov),movimientos.+:(mov))
+       val movimiento = pelea.mejorMov(criterio)
+       movimiento.map(mov => (pelea.pelearRound(mov),movimientos.+:(mov))).getOrElse(pelea,movimientos)
      }
-     resultado match{
-       case Fallo(_) => Try(throw new Exception("La pelea a fallado"))
-       case _ => Try(movs.takeWhile { elem => elem != null }) /*santi: hay que mejorar esto*/
-     }
+     movs
    }
    
    def pelearContra(oponente: Guerrero, planAtaque: List[Movimiento]): Resultado = {
@@ -78,6 +75,6 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
      (1 to rounds).foldLeft(peleaInicial){(fight, round) =>
        fight.pelearRound(MejorAtaque(criterio))
      }
-   }/*hace lo mismo que planDeAtaque y pelearContra juntos, sin Try ni nunca romper la caja*/
+   }/*hace lo mismo que planDeAtaque y pelearContra juntos*/
 }
 

@@ -4,7 +4,7 @@ import scala.util.Try
 
 abstract class Resultado{
   def flatmap(f:Movimiento) = this
-  def mejorMov(criterio : Criterio) : Movimiento = null
+  def mejorMov(criterio : Criterio) : Option[Movimiento] = None
   def pelearRound (f:Movimiento) : Resultado  = this
 }
 
@@ -21,8 +21,8 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
     }
   }
        
-  override def mejorMov(criterio : Criterio):Movimiento ={
-    atacante.movimientoMasEfectivoContra(atacado)(criterio)
+  override def mejorMov(criterio : Criterio):Option[Movimiento] ={
+    Option(atacante.movimientoMasEfectivoContra(atacado)(criterio))
   }
    
   override def pelearRound(f:Movimiento) : Resultado = {
