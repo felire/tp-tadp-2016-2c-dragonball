@@ -58,7 +58,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
      val movsInicial = List(): List[Movimiento]
      val (resultado, movs) = (1 to rounds).foldLeft(peleaInicial,movsInicial){(peleaYMovs, round) =>
        val (pelea,movimientos) = peleaYMovs
-       val movimiento = pelea.mejorMov(criterio)
+       val movimiento = pelea.proximoMovimiento(criterio)
        movimiento.map(mov => (pelea.pelearRound(mov),movimientos.+:(mov))).getOrElse(pelea,movimientos)
      }
      movs
