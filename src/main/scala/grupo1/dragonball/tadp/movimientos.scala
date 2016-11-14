@@ -29,17 +29,8 @@ case object CargarKi extends Movimiento{
 case object ContraAtacar extends Movimiento{
   def apply(atacante :Guerrero,  atacado : Guerrero)= {
        val mov = atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles)
-       val atac = atacado.deleteMov(mov)
-       mov.apply(atac, atacante)
-   } 
-}
-
-case class MejorAtaque(criterio : Criterio) extends Movimiento{
-  def apply(atacante :Guerrero,  atacado : Guerrero)= {
-       val mov = atacante.movimientoMasEfectivoContra(atacado)(criterio)
-       val atac = atacante.deleteMov(mov)
-       mov.apply(atac, atacado)
-   } 
+       mov.map(m => m.apply(atacado.deleteMov(m), atacante)).getOrElse(Peleando(atacado, atacante))
+   }
 }
 
 case class UsarItem(item: Item) extends Movimiento{

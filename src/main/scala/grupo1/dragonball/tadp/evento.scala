@@ -22,7 +22,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   }
        
   override def proximoMovimiento(criterio : Criterio):Option[Movimiento] ={
-    Option(atacante.movimientoMasEfectivoContra(atacado)(criterio))
+    atacante.movimientoMasEfectivoContra(atacado)(criterio)
   }
    
   override def pelearRound(f:Movimiento) : Resultado = {

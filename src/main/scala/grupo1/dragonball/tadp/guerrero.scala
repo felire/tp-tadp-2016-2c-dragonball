@@ -37,15 +37,11 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
     copy(energia = this.energia + energy)
   }
   
-   def movimientoMasEfectivoContra(atacado: Guerrero)(unCriterio: Criterio): Movimiento = {
-      getMovimientos.maxBy{ mov => unCriterio(this,atacado,mov)}
-   }
-
    def deleteMov(movimiento: Movimiento) ={
      copy(movimientos = this.movimientos.filter { mov => !mov.equals(movimiento) })
    }
    
-   def movimientoMasEfectivoContraOption(atacado: Guerrero)(unCriterio: Criterio): Option[Movimiento] = {
+   def movimientoMasEfectivoContra(atacado: Guerrero)(unCriterio: Criterio): Option[Movimiento] = {
      Try(movimientos.maxBy{ mov => unCriterio(this,atacado,mov)}).toOption
    }
 
@@ -70,11 +66,5 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
      }
    }
    
-  def pelearContra2(oponente: Guerrero,rounds: Int, criterio: Criterio): Resultado = {
-     val peleaInicial: Resultado = Peleando(this,oponente)
-     (1 to rounds).foldLeft(peleaInicial){(fight, round) =>
-       fight.pelearRound(MejorAtaque(criterio))
-     }
-   }/*hace lo mismo que planDeAtaque y pelearContra juntos*/
 }
 
