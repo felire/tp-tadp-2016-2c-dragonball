@@ -71,7 +71,8 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        movimiento.map(mov => (pelea.pelearRound(mov),movimientos.+:(mov))).getOrElse(pelea,movimientos)
      }
      resultado match{
-       case Peleando(a,b) if(movs.size < rounds) => None
+       case Peleando(_,_) if(movs.size < rounds) => None
+       case Fallo(_) => None
        case _ => Some(movs)
      }
    }
