@@ -135,7 +135,7 @@ case object MuchosGolpesNinja extends Ataque{
   def verificarEnergias(atacante:Guerrero, atacado:Guerrero) :Resultado={
     atacante.energia max atacado.energia match{
            case atacante.energia => Peleando(atacante,atacado.modificarEnergia(-20))
-           case atacado.energia => Peleando(atacante.copy(energia=atacante.energia-20),atacado)
+           case atacado.energia => Peleando(atacante.modificarEnergia(-20),atacado)
            case _ => Fallo("No se pudo golpear")
     }
   }

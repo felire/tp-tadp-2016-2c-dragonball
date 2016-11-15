@@ -3,14 +3,14 @@ package grupo1.dragonball.tadp
 import scala.util.Try
 
 abstract class Resultado{
-  def flatmap(f:Movimiento) = this
+  def flatMap(f:Movimiento) = this
   def proximoMovimiento(criterio : Criterio):Option[Movimiento] = None
   def pelearRound (f:Movimiento) : Resultado  = this
   def invertir : Resultado  = this
 }
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
-  override def flatmap(f:Movimiento) = {
+  override def flatMap(f:Movimiento) = {
     atacado.estado match {
       case KO => this
       case Muerto => Ganador(atacante)
@@ -35,7 +35,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   }
 }
 
-case class Fallo(error:String) extends Resultado{}
+case class Fallo(error:String) extends Resultado
 
-case class Ganador(ganador: Guerrero) extends Resultado{}
+case class Ganador(ganador: Guerrero) extends Resultado
 
