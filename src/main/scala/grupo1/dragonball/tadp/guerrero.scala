@@ -4,14 +4,6 @@ import scala.util.Try
 case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
 {
   
-  def checkear : Guerrero ={
-    if(energia <= 0){
-      copy(energia = 0 max energia, estado = Muerto)
-    }
-    else{
-      this
-    }
-  }
   def getMovimientos : List[Movimiento]={
     this.movimientos ++ especie.getMovimientos
   }
@@ -45,7 +37,12 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
    }
 
   def modificarEnergia (energy: Int)={
-    copy(energia = this.energia + energy)
+    if((this.energia + energy) <= 0){
+      copy(energia = 0, estado = Muerto)
+    }
+    else{
+      copy(energia = this.energia + energy)
+    }
   }
   
    def deleteMov(movimiento: Movimiento) ={
