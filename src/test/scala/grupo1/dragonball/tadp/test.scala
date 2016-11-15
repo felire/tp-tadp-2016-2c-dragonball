@@ -15,7 +15,7 @@ class test {
     goku = goku.addItem(FotoDeLaLuna)
     goku = goku.addMovimiento(ConvertirseEnMono)
     val plan = goku.planDeAtaque(vegeta, 10)(queNoLoMate)
-    val resultado = goku.pelearContra(vegeta, plan)
+    val resultado = goku.pelearContra(vegeta)(plan)
     resultado match{
       case Ganador(a) => assertEquals(1, 1)
     }
@@ -29,7 +29,7 @@ class test {
     goku = goku.addItem(FotoDeLaLuna)
     goku = goku.addMovimiento(ConvertirseEnMono)
     val plan = goku.planDeAtaque(vegeta, 7)(queNoLoMate)
-    val resultado = goku.pelearContra(vegeta, plan)
+    val resultado = goku.pelearContra(vegeta)(plan)
     resultado match{
       case Peleando(Guerrero(_,_,_,_,Saiyajin(Mono,_),_),otro) => assertEquals(true, true)
     }
