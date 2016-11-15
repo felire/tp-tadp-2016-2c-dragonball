@@ -43,7 +43,7 @@ class test {
     vegeta = vegeta.addMovimiento(DejarseFajar)
     goku = goku.addMovimiento(Genkidama)
     val plan = goku.planDeAtaque(vegeta, 7)(oponentesFuertes) /*nunca hace la Genkidama porque nunca se deja fajar primero*/
-    val resultado = goku.pelearContra(vegeta, plan)
+    val resultado = goku.pelearContra(vegeta)(plan)
     resultado match{
       case Ganador(gokusito) => assertEquals(true, true)
     }
