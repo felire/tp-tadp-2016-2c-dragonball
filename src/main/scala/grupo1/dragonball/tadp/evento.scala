@@ -7,6 +7,7 @@ abstract class Resultado{
   def proximoMovimiento(criterio : Criterio):Option[Movimiento] = None
   def pelearRound (f:Movimiento) : Resultado  = this
   def invertir : Resultado  = this
+  def checkear : Resultado = this
 }
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
@@ -17,11 +18,15 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
       case _ => atacante.estado match{
         case KO => this
         case Muerto => Ganador(atacado)
-        case _ => f(atacante.deleteMov(f), atacado)
+        case _ => f(atacante.deleteMov(f), atacado).checkear
       }
     }
   }
        
+  override def checkear : Resultado ={
+    copy(atacante = atacante.checkear, atacado = atacado.checkear)
+  }
+  
   override def proximoMovimiento(criterio : Criterio):Option[Movimiento] ={
     atacante.movimientoMasEfectivoContra(atacado)(criterio)
   }

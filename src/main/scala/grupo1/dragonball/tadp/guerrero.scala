@@ -4,6 +4,14 @@ import scala.util.Try
 case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimientos: List[Movimiento], especie: Especie, estado: EstadoPelea)
 {
   
+  def checkear : Guerrero ={
+    if(energia <= 0){
+      copy(energia = 0 max energia, estado = Muerto)
+    }
+    else{
+      this
+    }
+  }
   def getMovimientos : List[Movimiento]={
     this.movimientos ++ especie.getMovimientos
   }
@@ -60,7 +68,8 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        val movimiento = pelea.proximoMovimiento(criterio)
        movimiento.map(mov => (pelea.pelearRound(mov),movimientos.+:(mov))).getOrElse(pelea,movimientos)
      }
-     movs
+     movs/*enunciado : Si el guerrero no encuentra un movimiento satisfactorio para cada round pedido, 
+                       NO DEBE retornarse un plan más corto.*/
    }
    
    def pelearContra(oponente: Guerrero, planAtaque: List[Movimiento]): Resultado = {
