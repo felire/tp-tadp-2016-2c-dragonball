@@ -157,7 +157,7 @@ case class Onda(kiNecesario : Int) extends Ataque{
 case object Genkidama extends Ataque{
   def apply(atacante: Guerrero, atacado: Guerrero)={
      atacante.estado match {
-       case Fajadas(cantidad) => Peleando(atacante.copy(estado=Luchando),atacado.modificarEnergia(-(10^cantidad)))
+       case Fajadas(cantidad) => Peleando(atacante.copy(estado=Luchando),atacado.modificarEnergia(-BigInt(10).pow(cantidad).toInt))
        case _ => Fallo("El atacante no junto energia de su entorno")
      }
   }
