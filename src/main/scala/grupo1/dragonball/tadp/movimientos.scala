@@ -29,7 +29,7 @@ case object CargarKi extends Movimiento{
 case object ContraAtacar extends Movimiento{
   def apply(atacante :Guerrero,  atacado : Guerrero)= {
        val mov = atacado.movimientoMasEfectivoContra(atacante)(oponentesDebiles)
-       mov.map(m => m(atacado.deleteMov(m), atacante)).getOrElse(Peleando(atacado, atacante))
+       mov.map(m => m(atacado.deleteMov(m), atacante).invertir).getOrElse(Peleando(atacante, atacado))
    }
 }
 
@@ -70,7 +70,7 @@ case object ConvertirseEnSuperSaiyajin extends Movimiento{
     {
       case Saiyajin(Normal,cola) if(atacante.energia > atacante.energiaMax/2) => Peleando(atacante.copy(especie=Saiyajin(SuperSaiyajin(1),cola), energiaMax=atacante.energiaMax*5),atacado)
       case Saiyajin(SuperSaiyajin(nivel),cola) if(atacante.energia > atacante.energiaMax/2)=> Peleando(atacante.copy(especie=Saiyajin(SuperSaiyajin(nivel+1),cola),energiaMax=atacante.energiaMax*5*nivel),atacado)
-      case _ => Fallo("No es Saiyajin")
+      case _ => Fallo("No se pudo convertir en SuperSaiyajin")
     }
   }
 }

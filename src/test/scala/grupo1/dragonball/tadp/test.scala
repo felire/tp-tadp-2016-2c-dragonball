@@ -1,17 +1,29 @@
 package grupo1.dragonball.tadp
+
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert._
 
 class test {
-  /*
-  @Test
-  def cargarKi_test() = {
-    var saiyajin = new Saiyajin
-    saiyajin.addMovimiento(new CargarKi)
-    saiyajin.ejecutar(new CargarKi, null)
-    assertEquals(150, saiyajin.ki)
+   @Test
+  def planDeAtaque_test() = {
+    var vegeta = new Guerrero(10, 10, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(4), false), Luchando)
+    vegeta = vegeta.addMovimiento(DejarseFajar)
+    //vegeta = vegeta.addMovimiento(ContraAtacar)
+    //vegeta = vegeta.addMovimiento(Onda(1))
+    //vegeta = vegeta.addMovimiento(MuchosGolpesNinja)
+    goku = goku.addMovimiento(MuchosGolpesNinja)
+    goku = goku.addMovimiento(ConvertirseEnSuperSaiyajin)
+    //goku = goku.addMovimiento(ConvertirseEnMono)
+    val plan = goku.planDeAtaque(vegeta, 10)(queNoLoMate)
+    val resultado = goku.pelearContra(vegeta, plan)
+    resultado match{
+      case Ganador(a) => assertEquals(true, true)
+    }
+    assertEquals(true, plan.length > 0)
   }
+  /*
    @Test
   def transformarseEnSaiyan_test() = {
     var saiyajin = new Saiyajin

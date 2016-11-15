@@ -6,6 +6,7 @@ abstract class Resultado{
   def flatmap(f:Movimiento) = this
   def proximoMovimiento(criterio : Criterio):Option[Movimiento] = None
   def pelearRound (f:Movimiento) : Resultado  = this
+  def invertir : Resultado  = this
 }
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
@@ -27,6 +28,10 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
    
   override def pelearRound(f:Movimiento) : Resultado = {
     atacante.pelearRound(f, atacado)
+  }
+  
+  override def invertir : Resultado ={
+    Peleando(atacado, atacante)
   }
 }
 
