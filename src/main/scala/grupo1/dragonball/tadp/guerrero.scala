@@ -62,7 +62,7 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
      Peleando(this, oponente).flatMap(mov).flatMap(ContraAtacar)
    }
    
-   def planDeAtaque(oponente: Guerrero, rounds: Int)(criterio: Criterio): List[Movimiento] = {
+   def planDeAtaque(oponente: Guerrero, rounds: Int)(criterio: Criterio): Option[List[Movimiento]] = {
      val peleaInicial: Resultado = Peleando(this,oponente)
      val movsInicial = List(): List[Movimiento]
      val (resultado, movs) = (1 to rounds).foldLeft(peleaInicial,movsInicial){(peleaYMovs, round) =>
@@ -70,8 +70,10 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        val movimiento = pelea.proximoMovimiento(criterio)
        movimiento.map(mov => (pelea.pelearRound(mov),movimientos.+:(mov))).getOrElse(pelea,movimientos)
      }
-     movs/*enunciado : Si el guerrero no encuentra un movimiento satisfactorio para cada round pedido, 
-                       NO DEBE retornarse un plan más corto.*/
+     resultado match{
+       case Peleando(a,b) if(movs.size < rounds) => None
+       case _ => Some(movs)
+     }
    }
    
    def pelearContra(oponente: Guerrero, planAtaque: List[Movimiento]): Resultado = {
