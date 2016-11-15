@@ -49,5 +49,51 @@ class test {
     }
   }
   
+  @Test
+  def oponentesDebiles_test() = {
+    var vegeta = new Guerrero(1000, 1000, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var goku = new Guerrero(100, 100, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
+    vegeta = vegeta.addMovimiento(DejarseFajar)
+    vegeta = vegeta.addMovimiento(Onda(21))
+    vegeta = vegeta.addMovimiento(MuchosGolpesNinja)
+    
+    val resultado = vegeta.movimientoMasEfectivoContra(goku)(oponentesDebiles)
+    val mov = resultado.map(x => x).getOrElse(null)
+    mov match {
+      case Onda(_) => assertEquals(1, 1)
+    }
+  }
+  
+  @Test
+  def oponentesFuertes_test() = {
+    var vegeta = new Guerrero(1000, 1000, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var goku = new Guerrero(100, 100, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
+    vegeta = vegeta.addMovimiento(DejarseFajar)
+    vegeta = vegeta.addMovimiento(Onda(21))
+    vegeta = vegeta.addMovimiento(MuchosGolpesNinja)
+    
+    val resultado = vegeta.movimientoMasEfectivoContra(goku)(oponentesFuertes)
+    val mov = resultado.map(x => x).getOrElse(null)
+    mov match {
+      case DejarseFajar => assertEquals(1, 1)
+    }
+  }
+  
+  @Test
+  def tacanio_test() = {
+    var vegeta = new Guerrero(1000, 1000, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var goku = new Guerrero(100, 100, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
+    vegeta = vegeta.addItem(new SemillaErmitanio)
+    vegeta = vegeta.addItem(new SemillaErmitanio)
+    vegeta = vegeta.addMovimiento(UsarItem(new SemillaErmitanio))
+    vegeta = vegeta.addMovimiento(DejarseFajar)
+    
+    val resultado = vegeta.movimientoMasEfectivoContra(goku)(tacanio)
+    val mov = resultado.map(x => x).getOrElse(null)
+    mov match {
+      case DejarseFajar => assertEquals(1, 1)
+    }
+  }
+  
 }
 
