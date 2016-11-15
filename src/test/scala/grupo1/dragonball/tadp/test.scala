@@ -6,22 +6,33 @@ import org.junit.Assert._
 
 class test {
    @Test
-  def planDeAtaque_test() = {
+  def hayGanador_test() = {
     var vegeta = new Guerrero(10, 10, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
-    var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(4), false), Luchando)
+    var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(Normal, true), Luchando)
     vegeta = vegeta.addMovimiento(DejarseFajar)
-    //vegeta = vegeta.addMovimiento(ContraAtacar)
-    //vegeta = vegeta.addMovimiento(Onda(1))
-    //vegeta = vegeta.addMovimiento(MuchosGolpesNinja)
     goku = goku.addMovimiento(MuchosGolpesNinja)
     goku = goku.addMovimiento(ConvertirseEnSuperSaiyajin)
-    //goku = goku.addMovimiento(ConvertirseEnMono)
+    goku = goku.addItem(FotoDeLaLuna)
+    goku = goku.addMovimiento(ConvertirseEnMono)
     val plan = goku.planDeAtaque(vegeta, 10)(queNoLoMate)
     val resultado = goku.pelearContra(vegeta, plan)
     resultado match{
-      case Ganador(a) => assertEquals(true, true)
+      case Ganador(a) => assertEquals(1, 1)
     }
-    assertEquals(true, plan.length > 0)
+  }
+   
+  @Test
+  def seConvierteEnMono_test() = {
+    var vegeta = new Guerrero(10, 10, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(Normal, true), Luchando)
+    vegeta = vegeta.addMovimiento(DejarseFajar)
+    goku = goku.addItem(FotoDeLaLuna)
+    goku = goku.addMovimiento(ConvertirseEnMono)
+    val plan = goku.planDeAtaque(vegeta, 7)(queNoLoMate)
+    val resultado = goku.pelearContra(vegeta, plan)
+    resultado match{
+      case Peleando(Guerrero(_,_,_,_,Saiyajin(Mono,_),_),otro) => assertEquals(true, true)
+    }
   }
   /*
    @Test
@@ -142,12 +153,6 @@ class test {
     var r = 1 max 2
     assertEquals(1,r)
   }  */
-    @Test
-  def testtt() = {
-    var list = List(): List[Movimiento]
-    list = list.+:(null)
-    assertEquals(1,list.length)
-  } 
    
 }
 

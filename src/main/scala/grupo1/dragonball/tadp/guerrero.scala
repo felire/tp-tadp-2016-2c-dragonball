@@ -7,8 +7,13 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
   def getMovimientos : List[Movimiento]={
     this.movimientos ++ especie.getMovimientos
   }
+  
   def addMovimiento (mov : Movimiento): Guerrero ={
     copy(movimientos = movimientos.+:(mov))
+  }
+  
+  def addItem (item : Item) : Guerrero ={
+    copy(items = items.+:(item))
   }
 
  

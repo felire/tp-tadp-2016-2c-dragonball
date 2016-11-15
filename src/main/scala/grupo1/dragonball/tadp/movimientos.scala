@@ -125,7 +125,7 @@ case object MuchosGolpesNinja extends Ataque{
   def apply(atacante: Guerrero, atacado: Guerrero)={
      atacante.especie match{
        case Humano => atacado.especie match{
-         case Androide => Peleando(atacante.copy(energia=atacante.energia-10), atacado)
+         case Androide => Peleando(atacante.modificarEnergia(-10), atacado)
          case _ => verificarEnergias(atacante,atacado)
        }
        case _ => verificarEnergias (atacante,atacado)
@@ -134,7 +134,7 @@ case object MuchosGolpesNinja extends Ataque{
  
   def verificarEnergias(atacante:Guerrero, atacado:Guerrero) :Resultado={
     atacante.energia max atacado.energia match{
-           case atacante.energia => Peleando(atacante,atacado.copy(energia=atacado.energia-20))
+           case atacante.energia => Peleando(atacante,atacado.modificarEnergia(-20))
            case atacado.energia => Peleando(atacante.copy(energia=atacante.energia-20),atacado)
            case _ => Fallo("No se pudo golpear")
     }
@@ -147,8 +147,8 @@ case class Onda(kiNecesario : Int) extends Ataque{
     atacante.energia max this.kiNecesario match{
       case this.kiNecesario => Fallo("El atacante no tiene la energia necesaria")
       case atacante.energia => atacado.especie match{
-        case Monstruo(_) => Peleando(atacante.copy(energia=atacante.energia-this.kiNecesario), atacado.copy(energia=atacado.energia-(this.kiNecesario/2)))
-        case _ => Peleando(atacante.copy(energia=atacante.energia-this.kiNecesario), atacado.copy(energia=atacado.energia-(this.kiNecesario*2)))
+        case Monstruo(_) => Peleando(atacante.modificarEnergia(-this.kiNecesario), atacado.modificarEnergia(-(this.kiNecesario/2)))
+        case _ => Peleando(atacante.modificarEnergia(-this.kiNecesario), atacado.modificarEnergia(-(this.kiNecesario*2)))
       }
     }
   }
@@ -157,7 +157,7 @@ case class Onda(kiNecesario : Int) extends Ataque{
 case object Genkidama extends Ataque{
   def apply(atacante: Guerrero, atacado: Guerrero)={
      atacante.estado match {
-       case Fajadas(cantidad) => Peleando(atacante.copy(estado=Luchando),atacado.copy(energia=atacado.energia-(10^cantidad)))
+       case Fajadas(cantidad) => Peleando(atacante.copy(estado=Luchando),atacado.modificarEnergia(-(10^cantidad)))
        case _ => Fallo("El atacante no junto energia de su entorno")
      }
   }
