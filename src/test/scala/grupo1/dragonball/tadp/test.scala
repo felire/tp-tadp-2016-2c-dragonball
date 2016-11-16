@@ -34,26 +34,24 @@ class test {
     result match{
       case Peleando(Guerrero(_,_,_,_,Saiyajin(Mono,_),_),otro) => assertEquals(true, true)
     }
-
-  }   
-  
+  }  
      
   @Test
   def Henkidama_test() = {
-    var vegeta = new Guerrero(1000, 10, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var vegeta = new Guerrero(1000, 1000, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
     var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
     vegeta = vegeta.addMovimiento(DejarseFajar)
     goku = goku.addMovimiento(Genkidama)
-    val plann = goku.planDeAtaque(vegeta, 7)(oponentesFuertes) /*nunca hace la Genkidama porque nunca se deja fajar primero*/
+    val plann = goku.planDeAtaque(vegeta, 7)(queNoLoMate)
     val result = plann.map(plan =>goku.pelearContra(vegeta)(plan)).getOrElse(null)
     result match{
-      case Ganador(gokusito) => assertEquals(true, true)
+      case Ganador(_) => assertEquals(true, true)
     } 
   }
   
   @Test
   def noHayMovsSuficientes_test() = {
-    var vegeta = new Guerrero(1000, 10, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var vegeta = new Guerrero(1001, 1001, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
     var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
     vegeta = vegeta.addMovimiento(DejarseFajar)
     goku = goku.addMovimiento(DejarseFajar)
@@ -64,16 +62,15 @@ class test {
   
   @Test
   def hayMovsSuficientes_test() = {
-    var vegeta = new Guerrero(1000, 10, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
-    var goku = new Guerrero(10, 10, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
+    var vegeta = new Guerrero(100, 100, List[Item](),List[Movimiento](), new Saiyajin, Luchando)
+    var goku = new Guerrero(1000, 1000, List[Item](),List[Movimiento](), Saiyajin(SuperSaiyajin(1), true), Fajadas(3))
     vegeta = vegeta.addMovimiento(DejarseFajar)
     goku = goku.addMovimiento(Genkidama)
-    val plann = goku.planDeAtaque(vegeta, 1000)(oponentesFuertes) 
+    val plann = goku.planDeAtaque(vegeta, 1000)(oponentesDebiles) 
     val result = plann.map(plan =>goku.pelearContra(vegeta)(plan)).getOrElse(null)
     result match{
-      case Ganador(_) => assertEquals(true, true) // lo mata de una y devuelve la lista "incompleta"
-    }
-    
+      case Ganador(_) => assertEquals(true, true)
+    }   
   }
   
   @Test
@@ -121,7 +118,19 @@ class test {
       case DejarseFajar => assertEquals(1, 1)
     }
   }
-
+  
+  @Test
+  def sinMovMasEfectivo_test(){
+    var humanito = new Guerrero(7, 8, List[Item](),List[Movimiento](), Humano, Luchando)
+    var androide = new Guerrero(100, 100, List[Item](),List[Movimiento](), Androide, Luchando)
+    humanito = humanito.addMovimiento(Explotar)
+    humanito = humanito.addMovimiento(MuchosGolpesNinja)
+    val resultado = humanito.movimientoMasEfectivoContra(androide)(queNoLoMate)
+    val mov = resultado.map(x => x).getOrElse(null)
+    mov match {
+      case null => assertEquals(1,1)
+    }
+  }
   
 }
 

@@ -16,7 +16,8 @@ case object oponentesDebiles extends Criterio{
 case object oponentesFuertes extends Criterio{
   def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Double = {
     movimiento(atacante,atacado) match{
-      case Peleando(_,atacadoDespues)=>(atacadoDespues.energia-atacado.energia)
+      case Peleando(_, atacadoDespues) if (atacado.energia == atacadoDespues.energia) => 1
+      case Peleando(_, atacadoDespues) => (-1)*(atacado.energia-atacadoDespues.energia)
       case _ =>0
     }    
   }
@@ -25,7 +26,8 @@ case object oponentesFuertes extends Criterio{
 case object tacanio extends Criterio{
   def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Double = {
     movimiento(atacante,atacado) match{
-      case Peleando(atacanteDespues,_)=>(atacante.items.size - atacanteDespues.items.size)
+      case Peleando(atacanteDespues,_) if (atacante.items.size == atacanteDespues.items.size) => 1
+      case Peleando(atacanteDespues,_) => (atacante.items.size - atacanteDespues.items.size)
       case _ =>0
     }    
   }
