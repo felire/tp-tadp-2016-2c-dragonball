@@ -13,11 +13,14 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   override def flatMap(f:Movimiento) = {
     atacado.estado match {
       case KO => this
-      case Muerto => Ganador(atacante)
       case _ => atacante.estado match{
         case KO => this
-        case Muerto => Ganador(atacado)
-        case _ => f(atacante.deleteMov(f), atacado)
+        case _ => 
+          f(atacante.deleteMov(f), atacado) match{
+            case Peleando(atacante, Guerrero(_, _, _, _, _, Muerto)) => Ganador(atacante)
+            case Peleando(Guerrero(_, _, _, _, _, Muerto), atacado) => Ganador(atacado)
+            case _ => f(atacante.deleteMov(f), atacado)
+          }
       }
     }
   }

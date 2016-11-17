@@ -126,9 +126,10 @@ class test {
     humanito = humanito.addMovimiento(Explotar)
     humanito = humanito.addMovimiento(MuchosGolpesNinja)
     val resultado = humanito.movimientoMasEfectivoContra(androide)(queNoLoMate)
-    val mov = resultado.map(x => x).getOrElse(null)
+    val mov = resultado.getOrElse(null)
     mov match {
       case null => assertEquals(1,1)
+      case otro => assertEquals(1,1)
     }
   }
   
