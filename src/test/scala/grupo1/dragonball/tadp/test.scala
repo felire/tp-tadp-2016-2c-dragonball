@@ -129,7 +129,6 @@ class test {
     val mov = resultado.getOrElse(null)
     mov match {
       case null => assertEquals(1,1)
-      case otro => assertEquals(1,1)
     }
   }
   
