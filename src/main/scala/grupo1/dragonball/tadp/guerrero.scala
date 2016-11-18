@@ -8,6 +8,10 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
     this.movimientos ++ especie.getMovimientos
   }
   
+  def estaMuerto :Boolean ={
+    energia == 0
+  }
+  
   def addMovimiento (mov : Movimiento): Guerrero ={
     copy(movimientos = movimientos.+:(mov))
   }
@@ -83,6 +87,5 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
        pelea.pelearRound(movimiento)
      }
    }
-   
 }
 

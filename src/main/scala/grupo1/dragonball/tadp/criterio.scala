@@ -31,12 +31,11 @@ case object tacanio extends Criterio{
   }
 }
 
-//TODO hacer el que no lo mate tome en cuenta el contra ataque y que gane el atacante
 case object queNoLoMate extends Criterio{
   def apply(atacante:Guerrero,atacado:Guerrero, movimiento:Movimiento): Option[Double]   = {
-    Peleando(atacante,atacado).flatMap(movimiento) match{
-      case Peleando(atacanteDespues,_) if (atacanteDespues.energia == 0) => None
-      case Peleando(_,_) => Some(1)
+    movimiento(atacante,atacado) match{
+      case Peleando(atacanteDespues,_) if (atacanteDespues.estaMuerto) => None
+      case Peleando(atacanteDespues,_) => Some(atacanteDespues.energia)
       case _ => None
     }
   }
