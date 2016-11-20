@@ -9,42 +9,51 @@ abstract class Resultado{
   def foreach(f:(Guerrero, Guerrero)=>Unit): Unit = Unit
   def proximoMovimiento(criterio : Criterio):Option[Movimiento] = None
   def pelearRound (f:Movimiento) : Resultado  = this
-  def invertir : Resultado  = this
+  def invertir : Resultado = this
+  def checkear : Resultado = this
 }
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
+  
   override def flatMap(f:Movimiento) = {
     atacado.estado match {
       case KO => this
       case _ => atacante.estado match{
         case KO => this
         case _ => 
-          f(atacante.deleteMov(f), atacado) match{
-            case Peleando(atacante, Guerrero(_, _, _, _, _, Muerto)) => Ganador(atacante)
-            case Peleando(Guerrero(_, _, _, _, _, Muerto), atacado) => Ganador(atacado)
-            case _ => f(atacante.deleteMov(f), atacado)
-          }
+          f(atacante.deleteMov(f), atacado).checkear
       }
     }
   }
-  override def map(f:(Guerrero, Guerrero)=>(Guerrero, Guerrero)): Resultado =
-  {
-     val (atacante2 :Guerrero ,atacado2 : Guerrero) = f.apply(atacante, atacado)
-    Peleando(atacante2,atacado2)    
+  
+  override def checkear : Resultado = {
+    if(atacado.estaMuerto){
+      return Ganador(atacante)
+    }
+    if(atacante.estaMuerto){
+      return Ganador(atacado)
+    }
+    return this
   }
-  override def filter(f:(Guerrero, Guerrero)=>Boolean): Resultado = 
-  {
-    if (f.apply(atacante,atacado)) {
+  
+  override def map(f:(Guerrero, Guerrero)=>(Guerrero, Guerrero)): Resultado = {
+     val (atacante2 ,atacado2 ) = f.apply(atacante, atacado)
+    Peleando(atacante2,atacado2).checkear
+  }
+  
+  override def filter(f:(Guerrero, Guerrero)=>Boolean): Resultado = {
+    if (f.apply(atacante,atacado)){
       this
     } else {
       Fallo("Filter error")
     }
   }
-  override def foreach(f:(Guerrero, Guerrero)=>Unit): Unit = 
-  {
+  
+  override def foreach(f:(Guerrero, Guerrero)=>Unit): Unit = {
     f.apply(atacante,atacado)
   }
-  override def proximoMovimiento(criterio : Criterio):Option[Movimiento] ={
+  
+  override def proximoMovimiento(criterio : Criterio):Option[Movimiento] = {
     atacante.movimientoMasEfectivoContra(atacado)(criterio)
   }
    
@@ -52,7 +61,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
     atacante.pelearRound(f, atacado)
   }
   
-  override def invertir : Resultado ={
+  override def invertir : Resultado = {
     Peleando(atacado, atacante)
   }
 }
