@@ -59,8 +59,8 @@ case class Guerrero(energia : Int, energiaMax:Int, items: List[Item], movimiento
    }
    
    def movimientoMasEfectivoContra(atacado: Guerrero)(unCriterio: Criterio): Option[Movimiento] = {
-     val movs = movimientos.filter { mov => unCriterio(this,atacado,mov).map(_ => true).getOrElse(false) }
-     Try(movs.maxBy{ mov => unCriterio(this,atacado,mov).get}).toOption
+     val movs = movimientos.filter { mov => unCriterio(this,atacado,mov) >= 0 }
+     Try(movs.maxBy{ mov => unCriterio(this,atacado,mov)}).toOption
    }
 
    def pelearRound(mov:Movimiento, oponente: Guerrero): Resultado = {
