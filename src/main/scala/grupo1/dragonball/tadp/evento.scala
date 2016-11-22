@@ -15,17 +15,6 @@ abstract class Resultado{
 
 case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   
-  override def flatMap(f:Movimiento) = {
-    atacado.estado match {
-      case KO => this
-      case _ => atacante.estado match{
-        case KO => this
-        case _ => 
-          f(atacante.deleteMov(f), atacado).checkear
-      }
-    }
-  }
-  
   override def checkear : Resultado = {
     if(atacado.estaMuerto){
       return Ganador(atacante)
@@ -36,15 +25,34 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
     return this
   }
   
-  override def map(f:(Guerrero, Guerrero)=>(Guerrero, Guerrero)): Resultado = {
-     val (atacante2 ,atacado2 ) = f.apply(atacante, atacado)
-    Peleando(atacante2,atacado2).checkear
+  def noEstanKO : Boolean = {
+    atacado.estado != KO && atacante.estado != KO
+  }
+  
+  override def flatMap(f:Movimiento) = {
+    if(noEstanKO){
+      f(atacante.deleteMov(f), atacado).checkear
+    }
+    else{
+      this
+    }
+  }
+  
+  override def map(f:(Guerrero, Guerrero)=>(Guerrero, Guerrero)) = {
+    if(noEstanKO) {
+      val (atacante2 ,atacado2 ) = f.apply(atacante, atacado)
+      Peleando(atacante2,atacado2).checkear
+    } 
+    else {
+      this
+    }
   }
   
   override def filter(f:(Guerrero, Guerrero)=>Boolean): Resultado = {
     if (f.apply(atacante,atacado)){
       this
-    } else {
+    }
+    else {
       Fallo("Filter error")
     }
   }
