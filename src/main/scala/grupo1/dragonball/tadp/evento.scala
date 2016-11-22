@@ -40,7 +40,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   
   override def map(f:(Guerrero, Guerrero)=>(Guerrero, Guerrero)) = {
     if(noEstanKO) {
-      val (atacante2 ,atacado2 ) = f.apply(atacante, atacado)
+      val (atacante2 ,atacado2 ) = f(atacante, atacado)
       Peleando(atacante2,atacado2).checkear
     } 
     else {
@@ -49,7 +49,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   }
   
   override def filter(f:(Guerrero, Guerrero)=>Boolean): Resultado = {
-    if (f.apply(atacante,atacado)){
+    if (f(atacante,atacado)){
       this
     }
     else {
@@ -58,7 +58,7 @@ case class Peleando(atacante:Guerrero, atacado:Guerrero) extends Resultado{
   }
   
   override def foreach(f:(Guerrero, Guerrero)=>Unit): Unit = {
-    f.apply(atacante,atacado)
+    f(atacante,atacado)
   }
   
   override def proximoMovimiento(criterio : Criterio):Option[Movimiento] = {
